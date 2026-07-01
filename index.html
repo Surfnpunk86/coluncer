@@ -87,6 +87,7 @@ button{cursor:pointer;font-family:inherit}
 .hcta{display:flex;flex-wrap:wrap;gap:13px;margin-top:30px;opacity:0;animation:fi .7s .7s forwards}
 @keyframes fi{to{opacity:1}}
 .ends{display:flex;align-items:center;gap:12px;margin-top:34px;flex-wrap:wrap;opacity:0;animation:fi .7s .85s forwards}
+.pillrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}
 .ends .elbl{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600}
 .pill{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:100px;
   border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);font-family:'Archivo';font-weight:900;font-size:.88rem}
@@ -422,10 +423,12 @@ button{cursor:pointer;font-family:inherit}
           <a class="btn btn-ghost" href="#servicios">Ver servicios</a>
         </div>
         <div class="ends">
-          <span class="elbl">Respaldados por</span>
-          <span class="pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>IAT</span>
-          <span style="color:var(--L);font-family:'Archivo';font-weight:900;font-size:1.1rem">+</span>
-          <span class="pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CONEZZIÓN Group</span>
+          <span class="elbl" style="width:100%">Respaldados por</span>
+          <div class="pillrow">
+            <span class="pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>IAT</span>
+            <span style="color:var(--L);font-family:'Archivo';font-weight:900;font-size:1.1rem">+</span>
+            <span class="pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CONEZZIÓN Group</span>
+          </div>
         </div>
         <a href="#stats" class="scue" aria-hidden="true">Conocer más<i></i></a>
       </div>
