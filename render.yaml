@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: coluncer-sitio
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
