@@ -86,7 +86,7 @@ button{cursor:pointer;font-family:inherit}
 .hlead{max-width:480px;margin-top:22px;font-size:1.06rem;color:rgba(255,255,255,.86);opacity:0;animation:fi .7s .55s forwards}
 .hcta{display:flex;flex-wrap:wrap;gap:13px;margin-top:30px;opacity:0;animation:fi .7s .7s forwards}
 @keyframes fi{to{opacity:1}}
-.ends{display:flex;align-items:center;gap:12px;margin-top:34px;flex-wrap:wrap;opacity:0;animation:fi .7s .85s forwards}
+.ends{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:34px;opacity:0;animation:fi .7s .85s forwards}
 .pillrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}
 .ends .elbl{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600}
 .pill{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:100px;
@@ -118,7 +118,8 @@ button{cursor:pointer;font-family:inherit}
 .about h2{font-size:clamp(2rem,4.2vw,3.4rem);text-transform:uppercase;margin:16px 0 22px}
 .about h2 b{color:var(--V)}
 .about p{color:var(--M);font-size:1.03rem;margin-bottom:15px;max-width:510px}
-.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;align-items:center}
+.chips{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:28px}
+.chiprow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .chips .lbl{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--M)}
 .chip{display:inline-flex;align-items:center;gap:8px;border-radius:100px;padding:10px 20px;font-family:'Archivo';font-weight:900;font-size:.9rem}
 .chip.a{background:var(--K);color:#fff}
@@ -473,8 +474,10 @@ button{cursor:pointer;font-family:inherit}
       <p>Nuestro modelo integra almacenamiento, logística, distribución, e-commerce y última milla en una sola operación. Desde el primer contacto hasta el informe postventa, cada paso está diseñado para que puedas crecer sin preocuparte por la cadena de abastecimiento.</p>
       <div class="chips">
         <span class="lbl">Respaldados por</span>
-        <span class="chip a">IAT</span>
-        <span class="chip b">CONEZZIÓN Group</span>
+        <div class="chiprow">
+          <span class="chip a">IAT</span>
+          <span class="chip b">CONEZZIÓN Group</span>
+        </div>
       </div>
     </div>
     <div class="pillars rv d2">
