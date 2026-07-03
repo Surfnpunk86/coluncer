@@ -88,6 +88,8 @@ button{cursor:pointer;font-family:inherit}
 @keyframes fi{to{opacity:1}}
 .ends{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:34px;opacity:0;animation:fi .7s .85s forwards}
 .pillrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}
+.pill-break{flex-basis:100%;height:0}
+@media(min-width:600px){.pill-break{display:none}}
 .ends .elbl{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600}
 .pill{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:100px;
   border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);font-family:'Archivo';font-weight:900;font-size:.88rem}
@@ -430,8 +432,7 @@ button{cursor:pointer;font-family:inherit}
             <span class="pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>IAT</span>
             <span class="plus-sep" style="color:var(--L);font-family:'Archivo';font-weight:900;font-size:1.1rem">+</span>
             <span class="pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>CONEZZIÓN Group</span>
-          </div>
-          <div class="pillrow">
+            <span class="pill-break"></span>
             <span class="plus-sep" style="color:var(--L);font-family:'Archivo';font-weight:900;font-size:1.1rem">+</span>
             <span class="pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>LAFÊTE AMÉRICA</span>
           </div>
@@ -480,8 +481,7 @@ button{cursor:pointer;font-family:inherit}
           <span class="chip a">IAT</span>
           <span class="plus-sep" style="color:var(--K);font-family:'Archivo';font-weight:900;font-size:1.1rem">+</span>
           <span class="chip b">CONEZZIÓN Group</span>
-        </div>
-        <div class="chiprow">
+          <span class="pill-break"></span>
           <span class="plus-sep" style="color:var(--K);font-family:'Archivo';font-weight:900;font-size:1.1rem">+</span>
           <span class="chip b">LAFÊTE AMÉRICA</span>
         </div>
