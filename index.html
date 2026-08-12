@@ -767,6 +767,9 @@ const CAT = [
   {id:6, name:"Salsa picante artesanal 200ml",      by:"Chiles del Norte",        cat:"Gourmet",   badge:null,          price:18900, e:"🌶️",bg:"linear-gradient(135deg,#8b0000,#c0392b)"},
   {id:7, name:"Bolso tejido a mano – Wayuu",        by:"Wayuu Mochila House",     cat:"Moda",      badge:null,          price:75000, e:"👜", bg:"linear-gradient(135deg,#C6ED2E,#739e00)"},
   {id:8, name:"Velas aromáticas artesanales x3",   by:"Aromas del Caribe",       cat:"Hogar",     badge:"Nuevo",       price:42000, e:"🕯️",bg:"linear-gradient(135deg,#1a1a2e,#2c3e70)"},
+  {id:9, name:"Altavoz Bluetooth AQUA AQ65W",       by:"Coluncer Tech",           cat:"Tecnología",badge:"Nuevo",       price:399000,img:"images/tecnologia/altavoz-aqua-aq65w.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)"},
+  {id:10,name:"Parlante portátil BL AM-61 30W IPX7",by:"Coluncer Tech",           cat:"Tecnología",badge:null,          price:240000,img:"images/tecnologia/parlante-bl-am61.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)"},
+  {id:11,name:"Parlante portátil BL AM-67 50W IPX7",by:"Coluncer Tech",           cat:"Tecnología",badge:"Más vendido", price:350000,img:"images/tecnologia/parlante-bl-am67.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)"},
 ];
 
 const cop = n => "$"+n.toLocaleString("es-CO");
@@ -784,10 +787,10 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
 const grid = document.getElementById("prodgrid");
 grid.innerHTML = CAT.map((p,i)=>`
   <article class="pc rv ${["","d1","d2","d3"][i%4]}">
-    <div class="pph" style="background:${p.bg}">
+    <div class="pph" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center`:""}">
       <span class="pcat">${p.cat}</span>
       ${p.badge?`<span class="pbadge">${p.badge}</span>`:""}
-      ${p.e}
+      ${p.img?"":p.e}
     </div>
     <div class="pb">
       <h4>${p.name}</h4>
