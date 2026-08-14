@@ -184,6 +184,30 @@ button{cursor:pointer;font-family:inherit}
 .shophead h2{font-size:clamp(2rem,4.4vw,3.4rem);text-transform:uppercase;color:var(--K);margin-top:14px}
 .snote{font-size:.88rem;color:var(--M);max-width:320px}
 .prodgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.poverlay{position:fixed;inset:0;background:rgba(21,23,31,.6);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:.3s var(--ease);z-index:80}
+.poverlay.on{opacity:1;pointer-events:auto}
+.pmodal{position:fixed;top:50%;left:50%;transform:translate(-50%,-46%);width:min(880px,92vw);max-height:88vh;overflow:auto;
+  background:var(--W);border-radius:26px;box-shadow:0 40px 90px -20px rgba(0,0,0,.45);opacity:0;pointer-events:none;
+  transition:.35s var(--ease);z-index:81}
+.pmodal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.pmodal .px{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;border:1px solid var(--LN);
+  background:var(--W);font-size:1rem;z-index:2}
+.pm-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pm-img{min-height:320px;background-size:cover;background-position:center;position:relative}
+.pm-info{padding:38px 40px;display:flex;flex-direction:column;gap:14px}
+.pm-cat{font-family:'Archivo';font-weight:800;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--V)}
+.pm-info h3{font-size:1.5rem}
+.pm-by{color:var(--M);font-size:.9rem}
+.pm-desc{color:var(--G);font-size:.95rem;line-height:1.55}
+.pm-pricebox{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pm-price{font-family:'Archivo';font-weight:900;font-size:1.9rem}
+.pm-old{color:var(--M);text-decoration:line-through;font-size:1rem}
+.pm-save{background:var(--L);color:var(--K);font-family:'Archivo';font-weight:800;font-size:.72rem;
+  padding:4px 10px;border-radius:100px}
+.pm-actions{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.pm-src{font-size:.8rem;color:var(--M)}
+.pm-src a{color:var(--V);font-weight:700}
+@media(max-width:720px){.pm-body{grid-template-columns:1fr}.pm-img{min-height:220px}.pm-info{padding:28px 24px}}
 .pc{border:1px solid var(--LN);border-radius:22px;overflow:hidden;transition:.35s var(--ease);background:var(--W);display:flex;flex-direction:column}
 .pc:hover{transform:translateY(-8px);box-shadow:0 28px 58px -36px rgba(21,23,31,.55);border-color:var(--VS)}
 .pph{height:190px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;flex-shrink:0}
@@ -742,12 +766,20 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </aside>
 
+<!-- PRODUCT MODAL -->
+<div class="poverlay" id="poverlay"></div>
+<div class="pmodal" id="pmodal" role="dialog" aria-modal="true" aria-label="Ficha de producto">
+  <button class="px" id="pmodalClose" aria-label="Cerrar">✕</button>
+  <div class="pm-body" id="pmodalBody"></div>
+</div>
+
 <!-- FLOATING WHATSAPP -->
 <button class="waf watrig" data-msg="¡Hola COLUNCER! Quiero más información sobre sus servicios de logística." aria-label="Escríbenos por WhatsApp">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 0 0-10.3 18l-1.7 6 6.2-1.6A12 12 0 1 0 12 0zm5.5 14.5c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.1-.8 1-1 1.2-.4.2-.7 0a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.5.3-.5a.5.5 0 0 0 0-.5l-1-2.3c-.2-.5-.4-.5-.6-.5h-.6a1.1 1.1 0 0 0-.8.4A3.4 3.4 0 0 0 7 10.4a5.8 5.8 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c2 .8 2.5.7 2.9.6a2.9 2.9 0 0 0 2-1.4 2.4 2.4 0 0 0 .1-1.4 1 1 0 0 0-.9-.3z"/></svg>
   <span class="wt">Escríbenos</span>
 </button>
 
+<script src="https://checkout.wompi.co/widget.js"></script>
 <script>
 /* =================================================================
    ⚠️  CAMBIAR ANTES DE PUBLICAR — SOLO ESTAS DOS LÍNEAS
@@ -759,10 +791,18 @@ const WA_SHOW = "+57 301 631 5921"; // Número para mostrar en la página
    CATÁLOGO — Reemplazar con los productos reales de COLUNCER
    ================================================================= */
 const CAT = [
-  {id:9, name:"Altavoz Bluetooth AQUA AQ65W",       by:"Coluncer Tech",           cat:"Tecnología",badge:"Nuevo",       price:399000,img:"images/tecnologia/altavoz-aqua-aq65w.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)"},
-  {id:10,name:"Parlante portátil BL AM-61 30W IPX7",by:"Coluncer Tech",           cat:"Tecnología",badge:null,          price:240000,img:"images/tecnologia/parlante-bl-am61.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)"},
-  {id:11,name:"Parlante portátil BL AM-67 50W IPX7",by:"Coluncer Tech",           cat:"Tecnología",badge:"Más vendido", price:350000,img:"images/tecnologia/parlante-bl-am67.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)"},
+  {id:9, name:"Altavoz Bluetooth AQUA AQ65W",       by:"Coluncer Tech",           cat:"Tecnología",badge:"Nuevo",       price:399000,img:"images/tecnologia/altavoz-aqua-aq65w.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    desc:"Altavoz Bluetooth AQUA AQ65W con luces LED multicolor e iluminación envolvente. Diseño resistente en tela reforzada, ideal para fiestas y uso diario.",
+    sourceUrl:"https://bylcolombia.com/producto/aqua7-altavoz-bluetooth/"},
+  {id:10,name:"Parlante portátil BL AM-61 30W IPX7",by:"Coluncer Tech",           cat:"Tecnología",badge:null,          price:240000,img:"images/tecnologia/parlante-bl-am61.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    desc:"Parlante portátil Bluetooth BL AM-61, 30W de potencia y certificación sumergible IPX7. Perfecto para playa, piscina o actividades al aire libre.",
+    sourceUrl:"https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-61-30w/"},
+  {id:11,name:"Parlante portátil BL AM-67 50W IPX7",by:"Coluncer Tech",           cat:"Tecnología",badge:"Más vendido", price:350000,img:"images/tecnologia/parlante-bl-am67.jpg",bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    desc:"Parlante portátil Bluetooth BL AM-67, 50W de potencia y certificación sumergible IPX7, con asa de transporte reforzada. Mayor sonido y autonomía para exteriores.",
+    sourceUrl:"https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-67-50w/"},
 ];
+const TECH_DISCOUNT = 0.10; /* 10% de descuento para la categoría Tecnología */
+const discPrice = p => p.cat==="Tecnología" ? Math.round(p.price*(1-TECH_DISCOUNT)) : p.price;
 
 const cop = n => "$"+n.toLocaleString("es-CO");
 let cart = {};
@@ -777,22 +817,24 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
 
 /* ---- Render products ---- */
 const grid = document.getElementById("prodgrid");
-grid.innerHTML = CAT.map((p,i)=>`
-  <article class="pc rv ${["","d1","d2","d3"][i%4]}">
+grid.innerHTML = CAT.map((p,i)=>{
+  const dp = discPrice(p), hasDisc = dp < p.price;
+  return `
+  <article class="pc rv ${["","d1","d2","d3"][i%4]}" data-open="${p.id}" style="cursor:pointer">
     <div class="pph" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center`:""}">
       <span class="pcat">${p.cat}</span>
-      ${p.badge?`<span class="pbadge">${p.badge}</span>`:""}
+      ${hasDisc?`<span class="pbadge" style="background:var(--V);color:#fff">-10%</span>`:p.badge?`<span class="pbadge">${p.badge}</span>`:""}
       ${p.img?"":p.e}
     </div>
     <div class="pb">
       <h4>${p.name}</h4>
       <span class="pby">${p.by}</span>
       <div class="pfoot">
-        <span class="pprice">${cop(p.price)}</span>
+        ${hasDisc?`<span class="pprice">${cop(dp)} <s style="opacity:.5;font-weight:600;font-size:.85em;margin-left:4px">${cop(p.price)}</s></span>`:`<span class="pprice">${cop(p.price)}</span>`}
         <button class="add" data-id="${p.id}" aria-label="Agregar ${p.name}">+</button>
       </div>
     </div>
-  </article>`).join("");
+  </article>`;}).join("");
 
 /* ---- Cart sync ---- */
 function waUrl(msg){return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`}
@@ -827,14 +869,19 @@ function sync(){
   }).join("");
 }
 
-/* add */
+/* add + abrir ficha de producto */
 grid.addEventListener("click",e=>{
-  const btn=e.target.closest(".add"); if(!btn)return;
-  const id=btn.dataset.id;
-  cart[id]=(cart[id]||0)+1;
-  btn.classList.add("done"); btn.textContent="✓";
-  setTimeout(()=>{btn.classList.remove("done");btn.textContent="+"},900);
-  sync();
+  const btn=e.target.closest(".add");
+  if(btn){
+    const id=btn.dataset.id;
+    cart[id]=(cart[id]||0)+1;
+    btn.classList.add("done"); btn.textContent="✓";
+    setTimeout(()=>{btn.classList.remove("done");btn.textContent="+"},900);
+    sync();
+    return;
+  }
+  const card=e.target.closest("[data-open]"); if(!card)return;
+  openProduct(card.dataset.open);
 });
 
 /* qty & remove */
@@ -843,6 +890,66 @@ document.getElementById("ditems").addEventListener("click",e=>{
   if(q){cart[q.dataset.id]=(cart[q.dataset.id]||0)+(+q.dataset.q); if(cart[q.dataset.id]<=0)delete cart[q.dataset.id]; sync();}
   if(r){delete cart[r.dataset.rm]; sync();}
 });
+
+/* ---- Ficha de producto (modal) + pago con Wompi ---- */
+/* IMPORTANTE: reemplaza esta llave por tu llave PÚBLICA de Wompi (empieza por pub_test_ o pub_prod_).
+   La llave pública es segura de exponer en el navegador: NUNCA coloques aquí tu llave privada ni tu secreto de integridad. */
+const WOMPI_PUBLIC_KEY = "pub_test_TU_LLAVE_PUBLICA_AQUI";
+const WOMPI_REDIRECT_URL = window.location.origin + window.location.pathname;
+
+const pOverlay=document.getElementById("poverlay"), pModal=document.getElementById("pmodal"), pBody=document.getElementById("pmodalBody");
+function openProduct(id){
+  const p=CAT.find(x=>x.id==id); if(!p)return;
+  const dp=discPrice(p), hasDisc=dp<p.price;
+  pBody.innerHTML=`
+    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}')`:""}"></div>
+    <div class="pm-info">
+      <span class="pm-cat">${p.cat}</span>
+      <h3>${p.name}</h3>
+      <span class="pm-by">${p.by}</span>
+      <p class="pm-desc">${p.desc||""}</p>
+      <div class="pm-pricebox">
+        <span class="pm-price">${cop(dp)}</span>
+        ${hasDisc?`<span class="pm-old">${cop(p.price)}</span><span class="pm-save">-10% OFF</span>`:""}
+      </div>
+      <div class="pm-actions">
+        <button class="btn btn-lime" id="pmAdd">Agregar al pedido</button>
+        <button class="btn" id="pmWompi" style="background:#15171F;color:#fff">Pagar ahora con Wompi</button>
+      </div>
+      ${p.sourceUrl?`<p class="pm-src">Ficha original del producto: <a href="${p.sourceUrl}" target="_blank" rel="noopener">bylcolombia.com</a></p>`:""}
+    </div>`;
+  pOverlay.classList.add("on"); pModal.classList.add("on");
+
+  document.getElementById("pmAdd").onclick=()=>{
+    cart[p.id]=(cart[p.id]||0)+1; sync(); closeProduct();
+  };
+  document.getElementById("pmWompi").onclick=()=>payWithWompi(p,dp);
+}
+function closeProduct(){ pOverlay.classList.remove("on"); pModal.classList.remove("on"); }
+document.getElementById("pmodalClose").onclick=closeProduct;
+pOverlay.addEventListener("click",closeProduct);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeProduct(); });
+
+function payWithWompi(p,amount){
+  if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){
+    alert("Falta configurar la llave pública de Wompi para activar los pagos en línea. Mientras tanto, puedes finalizar tu compra por WhatsApp.");
+    return;
+  }
+  const ref = `${p.id}-${Date.now()}`;
+  const checkout = new WidgetCheckout({
+    currency: "COP",
+    amountInCents: amount * 100,
+    reference: ref,
+    publicKey: WOMPI_PUBLIC_KEY,
+    redirectUrl: WOMPI_REDIRECT_URL
+  });
+  checkout.open(function(result){
+    const tx = result.transaction;
+    if(tx && tx.status === "APPROVED"){
+      window.open(waUrl(`¡Hola COLUNCER! Realicé el pago de ${p.name} por Wompi.\nReferencia: ${ref}\nEstado: ${tx.status}`),"_blank");
+    }
+  });
+}
 
 /* checkout */
 document.getElementById("checkout").onclick=()=>{
