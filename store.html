@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda COLUNCER · Todos los productos</title>
+<meta name="description" content="Tienda online COLUNCER: encuentra productos de tecnología y más, con precios, categorías y filtros.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --V:#6B46E3;--VD:#4F2FC0;--VS:#8E6FF0;
+  --L:#C6ED2E;--LD:#A9D016;
+  --K:#15171F;--G:#54545A;--M:#6E707A;--B:#F4F5F1;--W:#FFFFFF;--LN:#E7E8E2;
+  --r:16px;--maxw:1320px;--ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--K);background:var(--B);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* ---- HEADER ---- */
+header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:14px 0;box-shadow:0 2px 20px rgba(0,0,0,.12)}
+.htop{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Archivo';font-weight:900;font-size:1.3rem;flex:none}
+.logo b{color:var(--L)}
+.search{flex:1;min-width:220px;display:flex;background:#fff;border-radius:100px;overflow:hidden}
+.search input{flex:1;border:0;outline:0;padding:11px 18px;font-size:.92rem;color:var(--K)}
+.search button{background:var(--L);color:var(--K);border:0;padding:0 20px;font-weight:800;font-family:'Archivo';font-size:.85rem}
+.back{flex:none;font-size:.82rem;font-weight:700;color:#fff;opacity:.85;padding:10px 16px;border:1px solid rgba(255,255,255,.3);border-radius:100px;white-space:nowrap}
+.back:hover{opacity:1;border-color:rgba(255,255,255,.6)}
+
+/* ---- LAYOUT ---- */
+.shell{display:grid;grid-template-columns:260px 1fr;gap:28px;padding:28px 0 80px}
+@media(max-width:860px){.shell{grid-template-columns:1fr}}
+
+/* ---- FILTERS SIDEBAR ---- */
+.filters{background:#fff;border:1px solid var(--LN);border-radius:var(--r);padding:22px;align-self:start;position:sticky;top:90px}
+@media(max-width:860px){.filters{position:static}}
+.filters h3{font-size:.95rem;margin-bottom:14px}
+.fgroup{margin-bottom:24px}
+.fgroup:last-child{margin-bottom:0}
+.fgroup h4{font-family:'Archivo';font-weight:800;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--M);margin-bottom:10px}
+.fopt{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:.88rem;color:var(--G);cursor:pointer}
+.fopt input{accent-color:var(--V);width:16px;height:16px;cursor:pointer}
+.fopt .cnt{margin-left:auto;color:var(--M);font-size:.78rem}
+.pricebox{display:flex;gap:8px;align-items:center;margin-top:6px}
+.pricebox input{width:100%;padding:8px 10px;border:1px solid var(--LN);border-radius:8px;font-size:.82rem}
+.clearbtn{width:100%;margin-top:6px;padding:9px;border-radius:8px;border:1px solid var(--LN);background:transparent;font-size:.8rem;font-weight:700;color:var(--G)}
+.clearbtn:hover{border-color:var(--V);color:var(--V)}
+
+/* ---- RESULTS ---- */
+.rtop{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.rcount{font-size:.88rem;color:var(--M)}
+.sortbox select{padding:9px 14px;border-radius:100px;border:1px solid var(--LN);background:#fff;font-size:.84rem;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:1080px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+
+.card{background:#fff;border:1px solid var(--LN);border-radius:14px;overflow:hidden;cursor:pointer;transition:.25s var(--ease);display:flex;flex-direction:column}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -18px rgba(21,23,31,.25)}
+.cimg{height:170px;background-size:cover;background-position:center;position:relative;flex-shrink:0}
+.ctag{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.94);color:var(--K);font-family:'Archivo';font-weight:800;
+  font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:100px}
+.cbadge{position:absolute;top:10px;right:10px;background:var(--V);color:#fff;font-family:'Archivo';font-weight:800;
+  font-size:.66rem;padding:4px 9px;border-radius:100px}
+.cbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cbody h4{font-size:.9rem;line-height:1.25;font-weight:700;font-family:'Inter';min-height:2.3em}
+.cby{font-size:.74rem;color:var(--M)}
+.cfoot{margin-top:auto;padding-top:8px;display:flex;flex-direction:column;gap:2px}
+.cprice{font-family:'Archivo';font-weight:900;font-size:1.05rem}
+.cold{font-size:.76rem;color:var(--M);text-decoration:line-through}
+.empty{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--M)}
+.empty .big{font-size:2.4rem;margin-bottom:10px}
+
+/* ---- MODAL ---- */
+.poverlay{position:fixed;inset:0;background:rgba(21,23,31,.6);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:.3s var(--ease);z-index:80}
+.poverlay.on{opacity:1;pointer-events:auto}
+.pmodal{position:fixed;top:50%;left:50%;transform:translate(-50%,-46%);width:min(880px,92vw);max-height:88vh;overflow:auto;
+  background:#fff;border-radius:22px;box-shadow:0 40px 90px -20px rgba(0,0,0,.45);opacity:0;pointer-events:none;
+  transition:.35s var(--ease);z-index:81}
+.pmodal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.pmodal .px{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;border:1px solid var(--LN);background:#fff;font-size:1rem;z-index:2}
+.pm-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pm-img{min-height:320px;background-size:cover;background-position:center}
+.pm-info{padding:38px 40px;display:flex;flex-direction:column;gap:14px}
+.pm-cat{font-family:'Archivo';font-weight:800;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--V)}
+.pm-info h3{font-size:1.4rem}
+.pm-by{color:var(--M);font-size:.9rem}
+.pm-desc{color:var(--G);font-size:.95rem;line-height:1.55}
+.pm-pricebox{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pm-price{font-family:'Archivo';font-weight:900;font-size:1.8rem}
+.pm-old{color:var(--M);text-decoration:line-through;font-size:1rem}
+.pm-save{background:var(--L);color:var(--K);font-family:'Archivo';font-weight:800;font-size:.72rem;padding:4px 10px;border-radius:100px}
+.pm-actions{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:'Archivo';font-weight:800;font-size:.9rem;
+  padding:14px 22px;border-radius:100px;border:0;transition:.2s;letter-spacing:.01em}
+.btn-lime{background:var(--L);color:var(--K)}
+.btn-lime:hover{transform:translateY(-2px)}
+.btn-dark{background:var(--K);color:#fff}
+.btn-dark:hover{transform:translateY(-2px)}
+.pm-src{font-size:.8rem;color:var(--M)}
+.pm-src a{color:var(--V);font-weight:700}
+@media(max-width:720px){.pm-body{grid-template-columns:1fr}.pm-img{min-height:220px}.pm-info{padding:26px 22px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap htop">
+    <div class="logo">COLUNCER <b>· Tienda</b></div>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Buscar productos, marcas y más...">
+      <button id="searchBtn">Buscar</button>
+    </div>
+    <a class="back" href="index.html">← Volver al sitio</a>
+  </div>
+</header>
+
+<div class="wrap shell">
+  <aside class="filters">
+    <h3>Filtrar resultados</h3>
+    <div class="fgroup">
+      <h4>Categoría</h4>
+      <div id="catFilters"></div>
+    </div>
+    <div class="fgroup">
+      <h4>Precio</h4>
+      <div class="pricebox">
+        <input type="number" id="minPrice" placeholder="Mín">
+        <span>–</span>
+        <input type="number" id="maxPrice" placeholder="Máx">
+      </div>
+    </div>
+    <div class="fgroup">
+      <h4>Ofertas</h4>
+      <label class="fopt"><input type="checkbox" id="onlyDiscount"> Solo con descuento</label>
+    </div>
+    <button class="clearbtn" id="clearFilters">Limpiar filtros</button>
+  </aside>
+
+  <main>
+    <div class="rtop">
+      <span class="rcount" id="resultCount"></span>
+      <div class="sortbox">
+        <select id="sortSelect">
+          <option value="relevance">Más relevantes</option>
+          <option value="price_asc">Menor precio</option>
+          <option value="price_desc">Mayor precio</option>
+          <option value="name_asc">Nombre A-Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+
+<div class="poverlay" id="poverlay"></div>
+<div class="pmodal" id="pmodal" role="dialog" aria-modal="true">
+  <button class="px" id="pmodalClose" aria-label="Cerrar">✕</button>
+  <div class="pm-body" id="pmodalBody"></div>
+</div>
+
+<script>
+const TECH_DISCOUNT = 0.10;
+const CAT = [
+  {id:9, name:"Altavoz Bluetooth AQUA AQ65W", by:"Coluncer Tech", cat:"Tecnología", badge:"Nuevo", price:399000,
+    img:"images/tecnologia/altavoz-aqua-aq65w.jpg", bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    desc:"Altavoz Bluetooth AQUA AQ65W con luces LED multicolor e iluminación envolvente. Diseño resistente en tela reforzada, ideal para fiestas y uso diario.",
+    sourceUrl:"https://bylcolombia.com/producto/aqua7-altavoz-bluetooth/"},
+  {id:10, name:"Parlante portátil BL AM-61 30W IPX7", by:"Coluncer Tech", cat:"Tecnología", badge:null, price:240000,
+    img:"images/tecnologia/parlante-bl-am61.jpg", bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    desc:"Parlante portátil Bluetooth BL AM-61, 30W de potencia y certificación sumergible IPX7. Perfecto para playa, piscina o actividades al aire libre.",
+    sourceUrl:"https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-61-30w/"},
+  {id:11, name:"Parlante portátil BL AM-67 50W IPX7", by:"Coluncer Tech", cat:"Tecnología", badge:"Más vendido", price:350000,
+    img:"images/tecnologia/parlante-bl-am67.jpg", bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    desc:"Parlante portátil Bluetooth BL AM-67, 50W de potencia y certificación sumergible IPX7, con asa de transporte reforzada. Mayor sonido y autonomía para exteriores.",
+    sourceUrl:"https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-67-50w/"},
+];
+
+/* Reemplaza esta llave por tu llave PÚBLICA de Wompi (pub_test_... o pub_prod_...). Nunca uses aquí tu llave privada. */
+const WOMPI_PUBLIC_KEY = "pub_test_TU_LLAVE_PUBLICA_AQUI";
+const WOMPI_REDIRECT_URL = window.location.origin + window.location.pathname;
+
+const cop = n => "$" + n.toLocaleString("es-CO");
+const discPrice = p => p.cat === "Tecnología" ? Math.round(p.price * (1 - TECH_DISCOUNT)) : p.price;
+
+const state = { search: "", cats: new Set(), min: null, max: null, onlyDiscount: false, sort: "relevance" };
+
+/* ---- build category filter checkboxes ---- */
+function buildCatFilters(){
+  const cats = [...new Set(CAT.map(p => p.cat))];
+  const box = document.getElementById("catFilters");
+  box.innerHTML = cats.map(c => {
+    const count = CAT.filter(p => p.cat === c).length;
+    return `<label class="fopt"><input type="checkbox" value="${c}" class="catChk"> ${c} <span class="cnt">(${count})</span></label>`;
+  }).join("");
+  box.querySelectorAll(".catChk").forEach(chk => chk.addEventListener("change", e => {
+    if(e.target.checked) state.cats.add(e.target.value); else state.cats.delete(e.target.value);
+    render();
+  }));
+}
+
+function getFiltered(){
+  let items = CAT.filter(p => {
+    if(state.search && !p.name.toLowerCase().includes(state.search.toLowerCase()) && !p.by.toLowerCase().includes(state.search.toLowerCase())) return false;
+    if(state.cats.size && !state.cats.has(p.cat)) return false;
+    const dp = discPrice(p);
+    if(state.min !== null && dp < state.min) return false;
+    if(state.max !== null && dp > state.max) return false;
+    if(state.onlyDiscount && dp >= p.price) return false;
+    return true;
+  });
+  if(state.sort === "price_asc") items.sort((a,b) => discPrice(a) - discPrice(b));
+  else if(state.sort === "price_desc") items.sort((a,b) => discPrice(b) - discPrice(a));
+  else if(state.sort === "name_asc") items.sort((a,b) => a.name.localeCompare(b.name));
+  return items;
+}
+
+function render(){
+  const items = getFiltered();
+  const grid = document.getElementById("grid");
+  document.getElementById("resultCount").textContent = `${items.length} resultado${items.length===1?"":"s"}`;
+  if(!items.length){
+    grid.innerHTML = `<div class="empty"><div class="big">🔍</div>No encontramos productos con esos filtros.<br>Prueba ajustando la búsqueda.</div>`;
+    return;
+  }
+  grid.innerHTML = items.map(p => {
+    const dp = discPrice(p), hasDisc = dp < p.price;
+    return `
+    <article class="card" data-open="${p.id}">
+      <div class="cimg" style="background:${p.bg}${p.img?`;background-image:url('${p.img}')`:""}">
+        <span class="ctag">${p.cat}</span>
+        ${hasDisc?`<span class="cbadge">-10%</span>`:p.badge?`<span class="cbadge" style="background:var(--K)">${p.badge}</span>`:""}
+      </div>
+      <div class="cbody">
+        <h4>${p.name}</h4>
+        <span class="cby">${p.by}</span>
+        <div class="cfoot">
+          <span class="cprice">${cop(dp)}</span>
+          ${hasDisc?`<span class="cold">${cop(p.price)}</span>`:""}
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+  grid.querySelectorAll("[data-open]").forEach(el => el.addEventListener("click", () => openProduct(el.dataset.open)));
+}
+
+/* ---- filter events ---- */
+document.getElementById("searchInput").addEventListener("input", e => { state.search = e.target.value; render(); });
+document.getElementById("searchBtn").addEventListener("click", () => render());
+document.getElementById("minPrice").addEventListener("input", e => { state.min = e.target.value ? +e.target.value : null; render(); });
+document.getElementById("maxPrice").addEventListener("input", e => { state.max = e.target.value ? +e.target.value : null; render(); });
+document.getElementById("onlyDiscount").addEventListener("change", e => { state.onlyDiscount = e.target.checked; render(); });
+document.getElementById("sortSelect").addEventListener("change", e => { state.sort = e.target.value; render(); });
+document.getElementById("clearFilters").addEventListener("click", () => {
+  state.search = ""; state.cats.clear(); state.min = null; state.max = null; state.onlyDiscount = false; state.sort = "relevance";
+  document.getElementById("searchInput").value = "";
+  document.getElementById("minPrice").value = "";
+  document.getElementById("maxPrice").value = "";
+  document.getElementById("onlyDiscount").checked = false;
+  document.getElementById("sortSelect").value = "relevance";
+  document.querySelectorAll(".catChk").forEach(c => c.checked = false);
+  render();
+});
+
+/* ---- product modal ---- */
+const pOverlay = document.getElementById("poverlay"), pModal = document.getElementById("pmodal"), pBody = document.getElementById("pmodalBody");
+function openProduct(id){
+  const p = CAT.find(x => x.id == id); if(!p) return;
+  const dp = discPrice(p), hasDisc = dp < p.price;
+  pBody.innerHTML = `
+    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}')`:""}"></div>
+    <div class="pm-info">
+      <span class="pm-cat">${p.cat}</span>
+      <h3>${p.name}</h3>
+      <span class="pm-by">${p.by}</span>
+      <p class="pm-desc">${p.desc||""}</p>
+      <div class="pm-pricebox">
+        <span class="pm-price">${cop(dp)}</span>
+        ${hasDisc?`<span class="pm-old">${cop(p.price)}</span><span class="pm-save">-10% OFF</span>`:""}
+      </div>
+      <div class="pm-actions">
+        <button class="btn btn-dark" id="pmWompi">Pagar ahora con Wompi</button>
+      </div>
+      ${p.sourceUrl?`<p class="pm-src">Ficha original del producto: <a href="${p.sourceUrl}" target="_blank" rel="noopener">bylcolombia.com</a></p>`:""}
+    </div>`;
+  pOverlay.classList.add("on"); pModal.classList.add("on");
+  document.getElementById("pmWompi").onclick = () => payWithWompi(p, dp);
+}
+function closeProduct(){ pOverlay.classList.remove("on"); pModal.classList.remove("on"); }
+document.getElementById("pmodalClose").onclick = closeProduct;
+pOverlay.addEventListener("click", closeProduct);
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeProduct(); });
+
+function payWithWompi(p, amount){
+  if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){
+    alert("Falta configurar la llave pública de Wompi para activar los pagos en línea.");
+    return;
+  }
+  const ref = `${p.id}-${Date.now()}`;
+  const checkout = new WidgetCheckout({
+    currency: "COP",
+    amountInCents: amount * 100,
+    reference: ref,
+    publicKey: WOMPI_PUBLIC_KEY,
+    redirectUrl: WOMPI_REDIRECT_URL
+  });
+  checkout.open(function(result){
+    console.log(result.transaction);
+  });
+}
+
+buildCatFilters();
+render();
+</script>
+<script src="https://checkout.wompi.co/widget.js"></script>
+</body>
+</html>
