@@ -889,19 +889,45 @@ document.getElementById("pmodalClose").onclick=closeProduct;
 pOverlay.addEventListener("click",closeProduct);
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeProduct(); });
 
-function payWithWompi(p,amount){
+const WOMPI_SIGNATURE_ENDPOINT = "https://coluncer-wompi-signature-surfnpunk86s-projects.vercel.app/api/wompi-signature";
+
+async function payWithWompi(p,amount){
   if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){
     alert("Falta configurar la llave pública de Wompi para activar los pagos en línea. Mientras tanto, puedes finalizar tu compra por WhatsApp.");
     return;
   }
   const ref = `${p.id}-${Date.now()}`;
-  const checkout = new WidgetCheckout({
+  const amountInCents = amount * 100;
+  const btn = document.getElementById("pmWompi");
+  const originalLabel = btn ? btn.textContent : "";
+  if(btn){ btn.disabled = true; btn.textContent = "Preparando pago seguro…"; }
+
+  let signature = null;
+  try{
+    const res = await fetch(WOMPI_SIGNATURE_ENDPOINT, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({reference:ref, amountInCents, currency:"COP"})
+    });
+    const data = await res.json();
+    if(res.ok && data.signature) signature = data.signature;
+  }catch(e){ /* si el servicio de firma no responde, seguimos sin ella (ver nota abajo) */ }
+
+  if(btn){ btn.disabled = false; btn.textContent = originalLabel; }
+
+  const checkoutConfig = {
     currency: "COP",
-    amountInCents: amount * 100,
+    amountInCents,
     reference: ref,
     publicKey: WOMPI_PUBLIC_KEY,
     redirectUrl: WOMPI_REDIRECT_URL
-  });
+  };
+  /* Si obtuvimos la firma de integridad, Wompi verifica que el monto no fue alterado.
+     Si el servicio de firma no está disponible, el pago igual funciona pero sin esa
+     verificación extra — por eso es importante configurar WOMPI_INTEGRITY_SECRET en Vercel. */
+  if(signature) checkoutConfig.signature = { integrity: signature };
+
+  const checkout = new WidgetCheckout(checkoutConfig);
   checkout.open(function(result){
     const tx = result.transaction;
     if(tx && tx.status === "APPROVED"){

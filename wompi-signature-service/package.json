@@ -1,0 +1,6 @@
+{
+  "name": "coluncer-wompi-signature",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Función serverless que genera la firma de integridad de Wompi para el checkout de la tienda COLUNCER."
+}
