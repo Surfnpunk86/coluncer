@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administrador · COLUNCER</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --V:#6B46E3;--VD:#4F2FC0;
+  --L:#C6ED2E;
+  --K:#15171F;--G:#54545A;--M:#6E707A;--B:#F4F5F1;--W:#FFFFFF;--LN:#E7E8E2;
+  --ok:#1F8A4C;--warn:#B5451C;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--K);background:var(--B);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.02em}
+button,input,select,textarea{font-family:inherit}
+a{color:var(--V)}
+
+/* ---- LOGIN GATE ---- */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.gatebox{background:#fff;border:1px solid var(--LN);border-radius:20px;padding:38px 34px;max-width:380px;width:100%}
+.gatebox h1{font-size:1.3rem;margin-bottom:6px}
+.gatebox p{color:var(--M);font-size:.88rem;margin-bottom:20px;line-height:1.5}
+.gatebox input{width:100%;padding:12px 14px;border:1px solid var(--LN);border-radius:10px;font-size:.95rem;margin-bottom:12px}
+.gatebox button{width:100%;padding:13px;border:0;border-radius:10px;background:var(--K);color:#fff;font-weight:800;font-family:'Archivo';font-size:.9rem}
+.gatebox button:hover{background:var(--VD)}
+.gateerr{color:var(--warn);font-size:.82rem;margin-top:10px;display:none}
+.gatenote{background:var(--B);border:1px solid var(--LN);border-radius:10px;padding:12px 14px;font-size:.78rem;color:var(--M);line-height:1.5;margin-top:18px}
+
+/* ---- APP ---- */
+#app{display:none}
+header{position:sticky;top:0;z-index:30;background:var(--K);color:#fff;padding:16px 0;box-shadow:0 2px 20px rgba(0,0,0,.12)}
+.htop{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.htop h1{font-size:1.15rem;color:#fff;flex:1}
+.htop h1 span{color:var(--L)}
+.hbtn{font-size:.8rem;font-weight:700;padding:9px 15px;border-radius:100px;border:1px solid rgba(255,255,255,.3);color:#fff;background:transparent}
+.hbtn:hover{border-color:rgba(255,255,255,.7)}
+.hbtn.primary{background:var(--L);color:var(--K);border-color:var(--L)}
+
+.wrap{max-width:1200px;margin:0 auto;padding:26px 24px 90px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.toolbar .spacer{flex:1}
+.status{font-size:.82rem;color:var(--M)}
+.status.saved{color:var(--ok)}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.pcard{background:#fff;border:1px solid var(--LN);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.pcard .thumb{height:150px;background-size:cover;background-position:center;background-color:#eee;position:relative}
+.pcard .thumb .noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--M);font-size:.8rem}
+.pcard .pinfo{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.pcard h4{font-size:.92rem;font-family:'Inter';font-weight:700}
+.pcard .meta{font-size:.76rem;color:var(--M)}
+.pcard .pricerow{display:flex;align-items:baseline;gap:8px;margin-top:4px}
+.pcard .price{font-family:'Archivo';font-weight:900;font-size:1.05rem}
+.pcard .old{font-size:.78rem;color:var(--M);text-decoration:line-through}
+.pcard .actions{margin-top:10px;display:flex;gap:8px}
+.pcard .actions button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--LN);background:#fff;font-size:.8rem;font-weight:700}
+.pcard .actions button.edit:hover{border-color:var(--V);color:var(--V)}
+.pcard .actions button.del:hover{border-color:var(--warn);color:var(--warn)}
+.addcard{border:2px dashed var(--LN);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;min-height:220px;color:var(--M);background:transparent}
+.addcard:hover{border-color:var(--V);color:var(--V)}
+.addcard .plus{font-size:2rem;font-family:'Archivo';font-weight:800}
+
+/* ---- MODAL EDITOR ---- */
+.moverlay{position:fixed;inset:0;background:rgba(21,23,31,.55);opacity:0;pointer-events:none;transition:.25s;z-index:60}
+.moverlay.on{opacity:1;pointer-events:auto}
+.editor{position:fixed;top:0;right:0;height:100vh;width:min(480px,100vw);background:#fff;box-shadow:-20px 0 60px rgba(0,0,0,.2);
+  transform:translateX(100%);transition:.3s cubic-bezier(.22,1,.36,1);z-index:61;overflow-y:auto}
+.editor.on{transform:translateX(0)}
+.ehead{position:sticky;top:0;background:#fff;padding:20px 24px;border-bottom:1px solid var(--LN);display:flex;align-items:center;gap:12px;z-index:2}
+.ehead h3{font-size:1.05rem;flex:1}
+.eclose{width:34px;height:34px;border-radius:50%;border:1px solid var(--LN);background:#fff}
+.ebody{padding:22px 24px 40px;display:flex;flex-direction:column;gap:16px}
+.field label{display:block;font-size:.78rem;font-weight:700;color:var(--G);margin-bottom:6px}
+.field input[type=text],.field input[type=number],.field input[type=url],.field select,.field textarea{
+  width:100%;padding:11px 13px;border:1px solid var(--LN);border-radius:9px;font-size:.9rem;background:#fff}
+.field textarea{resize:vertical;min-height:80px;font-family:inherit}
+.field .hint{font-size:.74rem;color:var(--M);margin-top:5px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.imgpreview{width:100%;height:150px;border-radius:10px;background-size:cover;background-position:center;background-color:var(--B);
+  border:1px solid var(--LN);display:flex;align-items:center;justify-content:center;color:var(--M);font-size:.8rem;margin-bottom:10px}
+.filebtn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:8px;border:1px solid var(--LN);
+  background:#fff;font-size:.82rem;font-weight:700;cursor:pointer}
+.filebtn input{display:none}
+.ebtns{display:flex;gap:10px;margin-top:6px}
+.ebtns button{flex:1;padding:13px;border-radius:9px;border:0;font-weight:800;font-family:'Archivo';font-size:.86rem}
+.ebtns .save{background:var(--K);color:#fff}
+.ebtns .save:hover{background:var(--VD)}
+.ebtns .cancel{background:var(--B);color:var(--G);border:1px solid var(--LN)}
+
+.helpbox{background:#fff;border:1px solid var(--LN);border-radius:var(--r);padding:20px 22px;margin-top:26px;font-size:.86rem;color:var(--G);line-height:1.6}
+.helpbox h3{font-size:.95rem;margin-bottom:8px}
+.helpbox code{background:var(--B);padding:2px 6px;border-radius:5px;font-size:.82em}
+.helpbox ol{margin:8px 0 0 18px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div id="gate">
+  <div class="gatebox">
+    <h1>Panel de administrador</h1>
+    <p>Ingresa la contraseña para editar el catálogo de la tienda COLUNCER.</p>
+    <input type="password" id="pw" placeholder="Contraseña">
+    <button id="pwBtn">Entrar</button>
+    <div class="gateerr" id="gateErr">Contraseña incorrecta.</div>
+    <div class="gatenote">
+      ⚠️ Esta contraseña solo oculta el panel a simple vista: al ser un sitio sin servidor, cualquiera con
+      conocimientos técnicos podría verla en el código fuente. No la uses para proteger información sensible.
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="htop">
+      <h1>COLUNCER <span>· Admin de productos</span></h1>
+      <a class="hbtn" href="index.html" target="_blank">Ver sitio ↗</a>
+      <a class="hbtn" href="store.html" target="_blank">Ver tienda ↗</a>
+      <button class="hbtn" id="logoutBtn">Salir</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="toolbar">
+      <button class="hbtn" style="border-color:var(--LN);color:var(--K)" id="importBtn">Importar products.json</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none">
+      <button class="hbtn primary" id="exportBtn">Descargar products.json</button>
+      <button class="hbtn" style="border-color:var(--LN);color:var(--K)" id="resetBtn">Restablecer catálogo</button>
+      <div class="spacer"></div>
+      <span class="status" id="statusMsg"></span>
+    </div>
+
+    <div class="pgrid" id="pgrid"></div>
+
+    <div class="helpbox">
+      <h3>Cómo publicar tus cambios en el sitio real</h3>
+      <p>Los cambios que haces aquí se guardan automáticamente en este navegador para que puedas previsualizarlos
+      en <b>Ver sitio</b> y <b>Ver tienda</b>. Para que <b>todos los visitantes</b> vean los cambios, sigue estos pasos:</p>
+      <ol>
+        <li>Haz clic en <b>Descargar products.json</b>.</li>
+        <li>Reemplaza el archivo <code>products.json</code> en tu repositorio de GitHub por el que acabas de descargar.</li>
+        <li>Haz commit y push — Render volverá a publicar el sitio automáticamente.</li>
+      </ol>
+      <p style="margin-top:8px">Si en otro momento quieres seguir editando desde cero, usa <b>Importar products.json</b>
+      para cargar el archivo publicado actual en este panel.</p>
+    </div>
+  </div>
+</div>
+
+<!-- EDITOR -->
+<div class="moverlay" id="moverlay"></div>
+<aside class="editor" id="editor">
+  <div class="ehead">
+    <h3 id="eTitle">Editar producto</h3>
+    <button class="eclose" id="eClose">✕</button>
+  </div>
+  <div class="ebody">
+    <div class="field">
+      <label>Foto del producto</label>
+      <div class="imgpreview" id="imgPreview">Sin imagen</div>
+      <label class="filebtn">📷 Subir foto
+        <input type="file" id="imgFile" accept="image/*">
+      </label>
+      <div class="hint">También puedes escribir una ruta o URL de imagen abajo.</div>
+    </div>
+    <div class="field">
+      <label>Ruta o URL de la imagen</label>
+      <input type="text" id="fImg" placeholder="images/tecnologia/producto.jpg">
+    </div>
+    <div class="field">
+      <label>Nombre del producto</label>
+      <input type="text" id="fName" placeholder="Ej: Altavoz Bluetooth AQUA AQ65W">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Marca / vendedor</label>
+        <input type="text" id="fBy" placeholder="Coluncer Tech">
+      </div>
+      <div class="field">
+        <label>Categoría</label>
+        <input type="text" id="fCat" placeholder="Tecnología" list="catList">
+        <datalist id="catList"></datalist>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Precio (COP)</label>
+        <input type="number" id="fPrice" placeholder="399000" min="0">
+      </div>
+      <div class="field">
+        <label>Descuento (%)</label>
+        <input type="number" id="fDiscount" placeholder="0" min="0" max="95">
+      </div>
+    </div>
+    <div class="field">
+      <label>Insignia (opcional)</label>
+      <input type="text" id="fBadge" placeholder="Nuevo, Más vendido...">
+    </div>
+    <div class="field">
+      <label>Descripción</label>
+      <textarea id="fDesc" placeholder="Descripción breve del producto..."></textarea>
+    </div>
+    <div class="field">
+      <label>Enlace a ficha original (opcional)</label>
+      <input type="url" id="fSrc" placeholder="https://...">
+    </div>
+    <div class="ebtns">
+      <button class="cancel" id="eCancel">Cancelar</button>
+      <button class="save" id="eSave">Guardar producto</button>
+    </div>
+  </div>
+</aside>
+
+<script src="products.js"></script>
+<script>
+const ADMIN_PASSWORD = "coluncer2026"; /* Cambia esta contraseña por una propia */
+
+let products = [];
+let editingId = null;
+
+/* ---- Login gate ---- */
+const SESSION_KEY = "coluncer_admin_session";
+function tryLogin(){
+  const val = document.getElementById("pw").value;
+  if(val === ADMIN_PASSWORD){
+    sessionStorage.setItem(SESSION_KEY, "1");
+    showApp();
+  }else{
+    document.getElementById("gateErr").style.display = "block";
+  }
+}
+document.getElementById("pwBtn").onclick = tryLogin;
+document.getElementById("pw").addEventListener("keydown", e => { if(e.key === "Enter") tryLogin(); });
+document.getElementById("logoutBtn").onclick = () => { sessionStorage.removeItem(SESSION_KEY); location.reload(); };
+
+async function showApp(){
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  products = await loadProducts();
+  renderGrid();
+}
+if(sessionStorage.getItem(SESSION_KEY) === "1") showApp();
+
+/* ---- Persistence ---- */
+function persist(){
+  localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+  const s = document.getElementById("statusMsg");
+  s.textContent = "Cambios guardados en este navegador ✓";
+  s.classList.add("saved");
+  setTimeout(() => { s.textContent = ""; s.classList.remove("saved"); }, 2500);
+}
+
+/* ---- Render product grid ---- */
+function renderGrid(){
+  const grid = document.getElementById("pgrid");
+  const cards = products.map(p => {
+    const dp = discPrice(p), hasDisc = dp < p.price;
+    return `
+    <article class="pcard">
+      <div class="thumb" style="${p.img?`background-image:url('${p.img}')`:""}">
+        ${p.img?"":`<span class="noimg">Sin foto</span>`}
+      </div>
+      <div class="pinfo">
+        <h4>${p.name}</h4>
+        <span class="meta">${p.by} · ${p.cat}</span>
+        <div class="pricerow">
+          <span class="price">${copFmt(dp)}</span>
+          ${hasDisc?`<span class="old">${copFmt(p.price)}</span>`:""}
+        </div>
+        <div class="actions">
+          <button class="edit" data-edit="${p.id}">Editar</button>
+          <button class="del" data-del="${p.id}">Eliminar</button>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+  grid.innerHTML = cards + `<button class="addcard" id="addBtn"><span class="plus">+</span>Agregar producto</button>`;
+
+  grid.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => openEditor(+b.dataset.edit));
+  grid.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteProduct(+b.dataset.del));
+  document.getElementById("addBtn").onclick = () => openEditor(null);
+}
+
+function deleteProduct(id){
+  const p = products.find(x => x.id === id);
+  if(!confirm(`¿Eliminar "${p.name}"? Esta acción no se puede deshacer.`)) return;
+  products = products.filter(x => x.id !== id);
+  persist();
+  renderGrid();
+}
+
+/* ---- Editor drawer ---- */
+const moverlay = document.getElementById("moverlay"), editor = document.getElementById("editor");
+function openEditor(id){
+  editingId = id;
+  const p = id ? products.find(x => x.id === id) : {name:"",by:"",cat:"",price:0,discount:0,badge:"",desc:"",sourceUrl:"",img:""};
+  document.getElementById("eTitle").textContent = id ? "Editar producto" : "Nuevo producto";
+  document.getElementById("fImg").value = p.img || "";
+  document.getElementById("fName").value = p.name || "";
+  document.getElementById("fBy").value = p.by || "";
+  document.getElementById("fCat").value = p.cat || "";
+  document.getElementById("fPrice").value = p.price || 0;
+  document.getElementById("fDiscount").value = p.discount || 0;
+  document.getElementById("fBadge").value = p.badge || "";
+  document.getElementById("fDesc").value = p.desc || "";
+  document.getElementById("fSrc").value = p.sourceUrl || "";
+  updateImgPreview(p.img || "");
+
+  const cats = [...new Set(products.map(x => x.cat))];
+  document.getElementById("catList").innerHTML = cats.map(c => `<option value="${c}">`).join("");
+
+  moverlay.classList.add("on"); editor.classList.add("on");
+}
+function closeEditor(){ moverlay.classList.remove("on"); editor.classList.remove("on"); }
+document.getElementById("eClose").onclick = closeEditor;
+document.getElementById("eCancel").onclick = closeEditor;
+moverlay.addEventListener("click", closeEditor);
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeEditor(); });
+
+function updateImgPreview(src){
+  const box = document.getElementById("imgPreview");
+  if(src){ box.style.backgroundImage = `url('${src}')`; box.textContent = ""; }
+  else{ box.style.backgroundImage = ""; box.textContent = "Sin imagen"; }
+}
+document.getElementById("fImg").addEventListener("input", e => updateImgPreview(e.target.value));
+
+/* Subir foto: se convierte a imagen embebida (base64) para que funcione sin subir archivos al servidor */
+document.getElementById("imgFile").addEventListener("change", e => {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    document.getElementById("fImg").value = reader.result;
+    updateImgPreview(reader.result);
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("eSave").onclick = () => {
+  const name = document.getElementById("fName").value.trim();
+  if(!name){ alert("El producto necesita un nombre."); return; }
+  const data = {
+    name,
+    by: document.getElementById("fBy").value.trim(),
+    cat: document.getElementById("fCat").value.trim() || "General",
+    price: Math.max(0, +document.getElementById("fPrice").value || 0),
+    discount: Math.min(95, Math.max(0, +document.getElementById("fDiscount").value || 0)),
+    badge: document.getElementById("fBadge").value.trim() || null,
+    desc: document.getElementById("fDesc").value.trim(),
+    sourceUrl: document.getElementById("fSrc").value.trim(),
+    img: document.getElementById("fImg").value.trim(),
+    bg: "linear-gradient(135deg,#0a0a0a,#1c1c1c)"
+  };
+  if(editingId){
+    const idx = products.findIndex(x => x.id === editingId);
+    products[idx] = {...products[idx], ...data};
+  }else{
+    const newId = products.length ? Math.max(...products.map(x => x.id)) + 1 : 1;
+    products.push({id:newId, ...data});
+  }
+  persist();
+  renderGrid();
+  closeEditor();
+};
+
+/* ---- Export / import / reset ---- */
+document.getElementById("exportBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify(products, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "products.json";
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+document.getElementById("importBtn").onclick = () => document.getElementById("importFile").click();
+document.getElementById("importFile").addEventListener("change", e => {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      if(!Array.isArray(data)) throw new Error("Formato inválido");
+      products = data;
+      persist();
+      renderGrid();
+      alert("Catálogo importado correctamente.");
+    }catch(err){
+      alert("No se pudo leer el archivo. Asegúrate de que sea un products.json válido.");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+document.getElementById("resetBtn").onclick = () => {
+  if(!confirm("Esto restablece el catálogo al contenido publicado actualmente (products.json) y descarta tus cambios sin publicar. ¿Continuar?")) return;
+  localStorage.removeItem(PRODUCTS_STORAGE_KEY);
+  location.reload();
+};
+</script>
+</body>
+</html>

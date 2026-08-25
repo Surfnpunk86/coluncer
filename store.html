@@ -165,29 +165,17 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
   <div class="pm-body" id="pmodalBody"></div>
 </div>
 
+<script src="products.js"></script>
 <script>
 const TECH_DISCOUNT = 0.10;
-const CAT = [
-  {id:9, name:"Altavoz Bluetooth AQUA AQ65W", by:"Coluncer Tech", cat:"Tecnología", badge:"Nuevo", price:399000,
-    img:"images/tecnologia/altavoz-aqua-aq65w.jpg", bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
-    desc:"Altavoz Bluetooth AQUA AQ65W con luces LED multicolor e iluminación envolvente. Diseño resistente en tela reforzada, ideal para fiestas y uso diario.",
-    sourceUrl:"https://bylcolombia.com/producto/aqua7-altavoz-bluetooth/"},
-  {id:10, name:"Parlante portátil BL AM-61 30W IPX7", by:"Coluncer Tech", cat:"Tecnología", badge:null, price:240000,
-    img:"images/tecnologia/parlante-bl-am61.jpg", bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
-    desc:"Parlante portátil Bluetooth BL AM-61, 30W de potencia y certificación sumergible IPX7. Perfecto para playa, piscina o actividades al aire libre.",
-    sourceUrl:"https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-61-30w/"},
-  {id:11, name:"Parlante portátil BL AM-67 50W IPX7", by:"Coluncer Tech", cat:"Tecnología", badge:"Más vendido", price:350000,
-    img:"images/tecnologia/parlante-bl-am67.jpg", bg:"linear-gradient(135deg,#0a0a0a,#1c1c1c)",
-    desc:"Parlante portátil Bluetooth BL AM-67, 50W de potencia y certificación sumergible IPX7, con asa de transporte reforzada. Mayor sonido y autonomía para exteriores.",
-    sourceUrl:"https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-67-50w/"},
-];
+
 
 /* Reemplaza esta llave por tu llave PÚBLICA de Wompi (pub_test_... o pub_prod_...). Nunca uses aquí tu llave privada. */
-const WOMPI_PUBLIC_KEY = "pub_test_TU_LLAVE_PUBLICA_AQUI";
+const WOMPI_PUBLIC_KEY = "pub_prod_qG1vdv56bfEcM7eoDNGoceCHSMVDUS8l";
 const WOMPI_REDIRECT_URL = window.location.origin + window.location.pathname;
 
-const cop = n => "$" + n.toLocaleString("es-CO");
-const discPrice = p => p.cat === "Tecnología" ? Math.round(p.price * (1 - TECH_DISCOUNT)) : p.price;
+const cop = copFmt;
+let CAT = [];
 
 const state = { search: "", cats: new Set(), min: null, max: null, onlyDiscount: false, sort: "relevance" };
 
@@ -235,7 +223,7 @@ function render(){
     <article class="card" data-open="${p.id}">
       <div class="cimg" style="background:${p.bg}${p.img?`;background-image:url('${p.img}')`:""}">
         <span class="ctag">${p.cat}</span>
-        ${hasDisc?`<span class="cbadge">-10%</span>`:p.badge?`<span class="cbadge" style="background:var(--K)">${p.badge}</span>`:""}
+        ${hasDisc?`<span class="cbadge">-${p.discount}%</span>`:p.badge?`<span class="cbadge" style="background:var(--K)">${p.badge}</span>`:""}
       </div>
       <div class="cbody">
         <h4>${p.name}</h4>
@@ -282,7 +270,7 @@ function openProduct(id){
       <p class="pm-desc">${p.desc||""}</p>
       <div class="pm-pricebox">
         <span class="pm-price">${cop(dp)}</span>
-        ${hasDisc?`<span class="pm-old">${cop(p.price)}</span><span class="pm-save">-10% OFF</span>`:""}
+        ${hasDisc?`<span class="pm-old">${cop(p.price)}</span><span class="pm-save">-${p.discount}% OFF</span>`:""}
       </div>
       <div class="pm-actions">
         <button class="btn btn-dark" id="pmWompi">Pagar ahora con Wompi</button>
@@ -315,8 +303,11 @@ function payWithWompi(p, amount){
   });
 }
 
-buildCatFilters();
-render();
+(async function initStore(){
+  CAT = await loadProducts();
+  buildCatFilters();
+  render();
+})();
 </script>
 <script src="https://checkout.wompi.co/widget.js"></script>
 </body>

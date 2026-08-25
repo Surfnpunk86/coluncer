@@ -1,0 +1,41 @@
+[
+  {
+    "id": 9,
+    "name": "Altavoz Bluetooth AQUA AQ65W",
+    "by": "Coluncer Tech",
+    "cat": "Tecnología",
+    "badge": "Nuevo",
+    "price": 399000,
+    "discount": 10,
+    "img": "images/tecnologia/altavoz-aqua-aq65w.jpg",
+    "bg": "linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    "desc": "Altavoz Bluetooth AQUA AQ65W con luces LED multicolor e iluminación envolvente. Diseño resistente en tela reforzada, ideal para fiestas y uso diario.",
+    "sourceUrl": "https://bylcolombia.com/producto/aqua7-altavoz-bluetooth/"
+  },
+  {
+    "id": 10,
+    "name": "Parlante portátil BL AM-61 30W IPX7",
+    "by": "Coluncer Tech",
+    "cat": "Tecnología",
+    "badge": null,
+    "price": 240000,
+    "discount": 10,
+    "img": "images/tecnologia/parlante-bl-am61.jpg",
+    "bg": "linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    "desc": "Parlante portátil Bluetooth BL AM-61, 30W de potencia y certificación sumergible IPX7. Perfecto para playa, piscina o actividades al aire libre.",
+    "sourceUrl": "https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-61-30w/"
+  },
+  {
+    "id": 11,
+    "name": "Parlante portátil BL AM-67 50W IPX7",
+    "by": "Coluncer Tech",
+    "cat": "Tecnología",
+    "badge": "Más vendido",
+    "price": 350000,
+    "discount": 10,
+    "img": "images/tecnologia/parlante-bl-am67.jpg",
+    "bg": "linear-gradient(135deg,#0a0a0a,#1c1c1c)",
+    "desc": "Parlante portátil Bluetooth BL AM-67, 50W de potencia y certificación sumergible IPX7, con asa de transporte reforzada. Mayor sonido y autonomía para exteriores.",
+    "sourceUrl": "https://bylcolombia.com/producto/parlante-bluetooth-portatil-bl-am-67-50w/"
+  }
+]
