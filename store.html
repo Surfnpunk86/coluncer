@@ -221,7 +221,7 @@ function render(){
     const dp = discPrice(p), hasDisc = dp < p.price;
     return `
     <article class="card" data-open="${p.id}">
-      <div class="cimg" style="background:${p.bg}${p.img?`;background-image:url('${p.img}')`:""}">
+      <div class="cimg" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center;background-repeat:no-repeat`:""}">
         <span class="ctag">${p.cat}</span>
         ${hasDisc?`<span class="cbadge">-${p.discount}%</span>`:p.badge?`<span class="cbadge" style="background:var(--K)">${p.badge}</span>`:""}
       </div>
@@ -262,7 +262,7 @@ function openProduct(id){
   const p = CAT.find(x => x.id == id); if(!p) return;
   const dp = discPrice(p), hasDisc = dp < p.price;
   pBody.innerHTML = `
-    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}')`:""}"></div>
+    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center;background-repeat:no-repeat`:""}"></div>
     <div class="pm-info">
       <span class="pm-cat">${p.cat}</span>
       <h3>${p.name}</h3>

@@ -861,7 +861,7 @@ function openProduct(id){
   const p=CAT.find(x=>x.id==id); if(!p)return;
   const dp=discPrice(p), hasDisc=dp<p.price;
   pBody.innerHTML=`
-    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}')`:""}"></div>
+    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center;background-repeat:no-repeat`:""}"></div>
     <div class="pm-info">
       <span class="pm-cat">${p.cat}</span>
       <h3>${p.name}</h3>
