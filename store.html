@@ -63,7 +63,7 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
 
 .card{background:#fff;border:1px solid var(--LN);border-radius:14px;overflow:hidden;cursor:pointer;transition:.25s var(--ease);display:flex;flex-direction:column}
 .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -18px rgba(21,23,31,.25)}
-.cimg{height:170px;background-size:cover;background-position:center;position:relative;flex-shrink:0}
+.cimg{height:190px;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:#12131a;position:relative;flex-shrink:0}
 .ctag{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.94);color:var(--K);font-family:'Archivo';font-weight:800;
   font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:100px}
 .cbadge{position:absolute;top:10px;right:10px;background:var(--V);color:#fff;font-family:'Archivo';font-weight:800;
@@ -86,7 +86,7 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
 .pmodal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
 .pmodal .px{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;border:1px solid var(--LN);background:#fff;font-size:1rem;z-index:2}
 .pm-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.pm-img{min-height:320px;background-size:cover;background-position:center}
+.pm-img{min-height:320px;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:#12131a}
 .pm-info{padding:38px 40px;display:flex;flex-direction:column;gap:14px}
 .pm-cat{font-family:'Archivo';font-weight:800;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--V)}
 .pm-info h3{font-size:1.4rem}
@@ -221,7 +221,7 @@ function render(){
     const dp = discPrice(p), hasDisc = dp < p.price;
     return `
     <article class="card" data-open="${p.id}">
-      <div class="cimg" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center;background-repeat:no-repeat`:""}">
+      <div class="cimg" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:contain;background-position:center;background-repeat:no-repeat`:""}">
         <span class="ctag">${p.cat}</span>
         ${hasDisc?`<span class="cbadge">-${p.discount}%</span>`:p.badge?`<span class="cbadge" style="background:var(--K)">${p.badge}</span>`:""}
       </div>
@@ -262,7 +262,7 @@ function openProduct(id){
   const p = CAT.find(x => x.id == id); if(!p) return;
   const dp = discPrice(p), hasDisc = dp < p.price;
   pBody.innerHTML = `
-    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center;background-repeat:no-repeat`:""}"></div>
+    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:contain;background-position:center;background-repeat:no-repeat`:""}"></div>
     <div class="pm-info">
       <span class="pm-cat">${p.cat}</span>
       <h3>${p.name}</h3>

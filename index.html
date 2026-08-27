@@ -193,7 +193,7 @@ button{cursor:pointer;font-family:inherit}
 .pmodal .px{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;border:1px solid var(--LN);
   background:var(--W);font-size:1rem;z-index:2}
 .pm-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.pm-img{min-height:320px;background-size:cover;background-position:center;position:relative}
+.pm-img{min-height:320px;background-size:contain;background-position:center;background-repeat:no-repeat;background-color:#12131a;position:relative}
 .pm-info{padding:38px 40px;display:flex;flex-direction:column;gap:14px}
 .pm-cat{font-family:'Archivo';font-weight:800;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--V)}
 .pm-info h3{font-size:1.5rem}
@@ -210,7 +210,7 @@ button{cursor:pointer;font-family:inherit}
 @media(max-width:720px){.pm-body{grid-template-columns:1fr}.pm-img{min-height:220px}.pm-info{padding:28px 24px}}
 .pc{border:1px solid var(--LN);border-radius:22px;overflow:hidden;transition:.35s var(--ease);background:var(--W);display:flex;flex-direction:column}
 .pc:hover{transform:translateY(-8px);box-shadow:0 28px 58px -36px rgba(21,23,31,.55);border-color:var(--VS)}
-.pph{height:190px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;flex-shrink:0}
+.pph{height:190px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;flex-shrink:0;background-color:#12131a}
 .pcat{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);color:var(--K);
   font-family:'Archivo';font-weight:800;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:100px}
 .pbadge{position:absolute;top:12px;right:12px;background:var(--L);color:var(--K);
@@ -779,7 +779,7 @@ grid.innerHTML = CAT.map((p,i)=>{
   const dp = discPrice(p), hasDisc = dp < p.price;
   return `
   <article class="pc rv in ${["","d1","d2","d3"][i%4]}" data-open="${p.id}" style="cursor:pointer">
-    <div class="pph" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center`:""}">
+    <div class="pph" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:contain;background-position:center;background-repeat:no-repeat`:""}">
       <span class="pcat">${p.cat}</span>
       ${hasDisc?`<span class="pbadge" style="background:var(--V);color:#fff">-${p.discount}%</span>`:p.badge?`<span class="pbadge">${p.badge}</span>`:""}
       ${p.img?"":(p.e||"")}
@@ -813,7 +813,7 @@ function sync(){
   box.innerHTML=ids.map(id=>{
     const p=CAT.find(x=>x.id==id);
     return `<div class="di">
-      <div class="dth" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center`:""}">${p.img?"":(p.e||"")}</div>
+      <div class="dth" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:contain;background-position:center;background-repeat:no-repeat`:""}">${p.img?"":(p.e||"")}</div>
       <div class="dinfo">
         <h5>${p.name}</h5>
         <span class="dp">${cop(p.price)} c/u</span>
@@ -861,7 +861,7 @@ function openProduct(id){
   const p=CAT.find(x=>x.id==id); if(!p)return;
   const dp=discPrice(p), hasDisc=dp<p.price;
   pBody.innerHTML=`
-    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:cover;background-position:center;background-repeat:no-repeat`:""}"></div>
+    <div class="pm-img" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:contain;background-position:center;background-repeat:no-repeat`:""}"></div>
     <div class="pm-info">
       <span class="pm-cat">${p.cat}</span>
       <h3>${p.name}</h3>
