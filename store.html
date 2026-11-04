@@ -293,7 +293,7 @@ document.getElementById("pmodalClose").onclick = closeProduct;
 pOverlay.addEventListener("click", closeProduct);
 document.addEventListener("keydown", e => { if(e.key === "Escape") closeProduct(); });
 
-const WOMPI_SIGNATURE_ENDPOINT = "https://coluncer-wompi-signature-surfnpunk86s-projects.vercel.app/api/wompi-signature";
+const WOMPI_SIGNATURE_ENDPOINT = "/api/wompi-signature"; /* mismo dominio: lo atiende server.js */
 
 async function payWithWompi(p, amount){
   if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){

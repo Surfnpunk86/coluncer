@@ -735,11 +735,14 @@ button{cursor:pointer;font-family:inherit}
   <div class="ditems" id="ditems"></div>
   <div class="df">
     <div class="dtrow"><span class="tl">Total estimado</span><span class="tv" id="dtotal">$0</span></div>
-    <button class="btn btn-lime" id="checkout">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 0 0-10.3 18l-1.7 6 6.2-1.6A12 12 0 1 0 12 0z"/></svg>
-      Finalizar pedido por WhatsApp
+    <button class="btn btn-ink" id="payCart" style="width:100%;justify-content:center;margin-bottom:10px">
+      Pagar con Wompi (tarjeta, PSE, Nequi)
     </button>
-    <p class="dn">Coordinamos pago y entrega contigo directamente.</p>
+    <button class="btn btn-lime" id="checkout" style="width:100%;justify-content:center">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 0 0-10.3 18l-1.7 6 6.2-1.6A12 12 0 1 0 12 0z"/></svg>
+      Prefiero coordinar por WhatsApp
+    </button>
+    <p class="dn" id="payNote">Pago seguro procesado por Wompi. También puedes coordinar por WhatsApp.</p>
   </div>
 </aside>
 
@@ -808,7 +811,7 @@ function waUrl(msg){return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`
 
 function sync(){
   const ids=Object.keys(cart);
-  const total=ids.reduce((s,id)=>s+CAT.find(p=>p.id==id).price*cart[id],0);
+  const total=ids.reduce((s,id)=>s+discPrice(CAT.find(p=>p.id==id))*cart[id],0);
   const count=ids.reduce((s,id)=>s+cart[id],0);
   document.getElementById("dtotal").textContent=cop(total);
   const b=document.getElementById("bubble");
@@ -824,7 +827,7 @@ function sync(){
       <div class="dth" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:contain;background-position:center;background-repeat:no-repeat`:""}">${p.img?"":(p.e||"")}</div>
       <div class="dinfo">
         <h5>${p.name}</h5>
-        <span class="dp">${cop(p.price)} c/u</span>
+        <span class="dp">${cop(discPrice(p))} c/u</span>
         <div class="qty">
           <button data-q="-1" data-id="${id}">−</button>
           <span>${cart[id]}</span>
@@ -897,59 +900,77 @@ document.getElementById("pmodalClose").onclick=closeProduct;
 pOverlay.addEventListener("click",closeProduct);
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeProduct(); });
 
-const WOMPI_SIGNATURE_ENDPOINT = "https://coluncer-wompi-signature-surfnpunk86s-projects.vercel.app/api/wompi-signature";
+const WOMPI_SIGNATURE_ENDPOINT = "/api/wompi-signature"; /* mismo dominio: lo atiende server.js */
 
-async function payWithWompi(p,amount){
+/* Abre el widget de Wompi. Pide primero la firma de integridad al servicio en Vercel. */
+async function openWompi({reference, amountInCents, button, busyLabel, onApproved}){
   if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){
-    alert("Falta configurar la llave pública de Wompi para activar los pagos en línea. Mientras tanto, puedes finalizar tu compra por WhatsApp.");
+    alert("Falta configurar la llave pública de Wompi. Mientras tanto, puedes coordinar tu compra por WhatsApp.");
     return;
   }
-  const ref = `${p.id}-${Date.now()}`;
-  const amountInCents = amount * 100;
-  const btn = document.getElementById("pmWompi");
-  const originalLabel = btn ? btn.textContent : "";
-  if(btn){ btn.disabled = true; btn.textContent = "Preparando pago seguro…"; }
+  if(typeof WidgetCheckout === "undefined"){
+    alert("No se pudo cargar Wompi. Revisa tu conexión (o desactiva el bloqueador de anuncios) e inténtalo de nuevo.");
+    return;
+  }
+  const original = button ? button.textContent : "";
+  if(button){ button.disabled = true; button.textContent = busyLabel || "Preparando pago seguro…"; }
 
   let signature = null;
   try{
     const res = await fetch(WOMPI_SIGNATURE_ENDPOINT, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({reference:ref, amountInCents, currency:"COP"})
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({reference, amountInCents, currency:"COP"})
     });
     const data = await res.json();
     if(res.ok && data.signature) signature = data.signature;
-  }catch(e){ /* si el servicio de firma no responde, seguimos sin ella (ver nota abajo) */ }
+  }catch(e){ /* sin firma: ver nota en WOMPI_SIGNATURE_ENDPOINT */ }
 
-  if(btn){ btn.disabled = false; btn.textContent = originalLabel; }
+  if(button){ button.disabled = false; button.textContent = original; }
 
-  const checkoutConfig = {
-    currency: "COP",
-    amountInCents,
-    reference: ref,
-    publicKey: WOMPI_PUBLIC_KEY,
-    redirectUrl: WOMPI_REDIRECT_URL
-  };
-  /* Si obtuvimos la firma de integridad, Wompi verifica que el monto no fue alterado.
-     Si el servicio de firma no está disponible, el pago igual funciona pero sin esa
-     verificación extra — por eso es importante configurar WOMPI_INTEGRITY_SECRET en Vercel. */
-  if(signature) checkoutConfig.signature = { integrity: signature };
+  const cfg = {currency:"COP", amountInCents, reference, publicKey:WOMPI_PUBLIC_KEY, redirectUrl:WOMPI_REDIRECT_URL};
+  if(signature) cfg.signature = {integrity: signature};
+  new WidgetCheckout(cfg).open(function(result){
+    const tx = result && result.transaction;
+    if(tx && tx.status === "APPROVED" && onApproved) onApproved(tx);
+  });
+}
 
-  const checkout = new WidgetCheckout(checkoutConfig);
-  checkout.open(function(result){
-    const tx = result.transaction;
-    if(tx && tx.status === "APPROVED"){
-      window.open(waUrl(`¡Hola COLUNCER! Realicé el pago de ${p.name} por Wompi.\nReferencia: ${ref}\nEstado: ${tx.status}`),"_blank");
+/* Pago de un solo producto (desde la ficha) */
+function payWithWompi(p,amount){
+  const ref = `P${p.id}-${Date.now()}`;
+  openWompi({
+    reference: ref, amountInCents: amount*100,
+    button: document.getElementById("pmWompi"),
+    onApproved: ()=> window.open(waUrl(`¡Hola COLUNCER! Pagué ${p.name} por Wompi.\nReferencia: ${ref}\nTotal: ${cop(amount)}`),"_blank")
+  });
+}
+
+/* Pago de todo el carrito */
+function payCart(){
+  const ids = Object.keys(cart); if(!ids.length) return;
+  let total = 0, lines = "";
+  ids.forEach(id=>{
+    const p = CAT.find(x=>x.id==id), sub = discPrice(p)*cart[id];
+    total += sub; lines += `• ${cart[id]}x ${p.name} — ${cop(sub)}\n`;
+  });
+  const ref = `C${Date.now()}`;
+  openWompi({
+    reference: ref, amountInCents: total*100,
+    button: document.getElementById("payCart"),
+    onApproved: ()=>{
+      cart = {}; sync(); close();
+      window.open(waUrl(`¡Hola COLUNCER! Pagué mi pedido por Wompi:\n\n${lines}\nTotal: ${cop(total)}\nReferencia: ${ref}\n\nQuedo atento a la coordinación de entrega.`),"_blank");
     }
   });
 }
+document.getElementById("payCart").onclick = payCart;
 
 /* checkout */
 document.getElementById("checkout").onclick=()=>{
   const ids=Object.keys(cart); if(!ids.length)return;
   let msg="¡Hola COLUNCER! Quiero realizar este pedido:\n\n";
   let tot=0;
-  ids.forEach(id=>{const p=CAT.find(x=>x.id==id);const s=p.price*cart[id];tot+=s;msg+=`• ${cart[id]}x ${p.name} — ${cop(s)}\n`;});
+  ids.forEach(id=>{const p=CAT.find(x=>x.id==id);const s=discPrice(p)*cart[id];tot+=s;msg+=`• ${cart[id]}x ${p.name} — ${cop(s)}\n`;});
   msg+=`\nTotal: ${cop(tot)}\n\n¿Me confirman disponibilidad y forma de entrega?`;
   window.open(waUrl(msg),"_blank");
 };
