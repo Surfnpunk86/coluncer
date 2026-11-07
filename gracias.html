@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google Tag Manager -->
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5ZBPG4B8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
+<!-- End Google Tag Manager -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>{{TITLE}} · COLUNCER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--V:#6B46E3;--VD:#4F2FC0;--L:#C6ED2E;--K:#15171F;--G:#54545A;--M:#6E707A;--B:#F4F5F1;--LN:#E7E8E2;--ok:#1F8A4C;--wait:#B7791F;--bad:#C0392B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--K);background:var(--B);-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2{font-family:'Archivo',sans-serif;font-weight:900;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+header{background:var(--K);color:#fff;padding:16px 0}
+.wrap{max-width:720px;margin:0 auto;padding:0 22px}
+.hrow{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Archivo';font-weight:900;font-size:1.2rem}
+.logo b{color:var(--L)}
+.back{font-size:.82rem;font-weight:700;opacity:.85}
+main{padding:34px 0 70px}
+.card{background:#fff;border:1px solid var(--LN);border-radius:22px;padding:34px 30px;text-align:center}
+.icon{width:68px;height:68px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;font-weight:900}
+.s-aprobado .icon{background:var(--ok)} .s-pendiente .icon{background:var(--wait)} .s-rechazado .icon{background:var(--bad)}
+h1{font-size:clamp(1.7rem,5vw,2.3rem);line-height:1.05;margin-bottom:12px}
+.lead{color:var(--G);line-height:1.6;max-width:520px;margin:0 auto}
+.ref{display:inline-block;margin-top:16px;background:var(--B);border:1px solid var(--LN);border-radius:100px;padding:7px 16px;font-size:.8rem;color:var(--M)}
+.ref b{color:var(--K)}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Archivo';font-weight:800;font-size:.9rem;padding:14px 24px;border-radius:100px;border:0;cursor:pointer}
+.btn-lime{background:var(--L);color:var(--K)} .btn-ink{background:var(--K);color:#fff}
+.btn:disabled{opacity:.6;cursor:wait}
+.order{margin-top:22px;text-align:left;background:var(--B);border:1px solid var(--LN);border-radius:14px;padding:16px 18px;font-size:.88rem;display:none}
+.order h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--M);margin-bottom:8px}
+.order li{list-style:none;padding:3px 0;color:var(--G)}
+.order .tot{margin-top:8px;font-weight:800;color:var(--K)}
+/* Formulario de envío */
+.ship{margin-top:26px;text-align:left;border-top:1px solid var(--LN);padding-top:26px}
+.ship h2{font-size:1.25rem;margin-bottom:6px}
+.ship .sub{color:var(--M);font-size:.88rem;margin-bottom:18px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid .full{grid-column:1/-1}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.card{padding:28px 20px}}
+label{display:block;font-size:.78rem;font-weight:700;color:var(--G);margin-bottom:5px}
+input,textarea{width:100%;padding:12px 13px;border:1px solid var(--LN);border-radius:10px;font:inherit;font-size:.92rem;background:#fff}
+input:focus,textarea:focus{outline:2px solid var(--V);outline-offset:1px;border-color:var(--V)}
+textarea{resize:vertical;min-height:70px}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:var(--G);line-height:1.45;font-weight:500}
+.consent input{width:18px;height:18px;margin-top:2px;flex:none;accent-color:var(--V)}
+.err{color:var(--bad);font-size:.82rem;margin-top:10px;display:none}
+.done{display:none;margin-top:16px;background:#EAF7EF;border:1px solid #BfE5CF;color:#17653A;border-radius:12px;padding:14px 16px;font-size:.88rem;line-height:1.5}
+</style>
+</head>
+<body class="s-{{STATE}}">
+<header><div class="wrap hrow"><a class="logo" href="/">COLUNCER<b>.</b></a><a class="back" href="/">← Volver al sitio</a></div></header>
+
+<main><div class="wrap">
+  <section class="card">
+    <div class="icon" aria-hidden="true">{{ICON}}</div>
+    <h1>{{TITLE}}</h1>
+    <p class="lead" id="lead">{{LEAD}}</p>
+    <span class="ref" id="refBox" style="display:none">Referencia de tu pedido: <b id="refTxt"></b></span>
+
+    <div class="order" id="orderBox"><h2>Tu pedido</h2><ul id="orderLines"></ul><div class="tot" id="orderTot"></div></div>
+
+    <!--IF_APROBADO-->
+    <form class="ship" id="shipForm" novalidate>
+      <h2>¿A dónde enviamos tu pedido?</h2>
+      <p class="sub">Déjanos tus datos de envío y te escribimos por WhatsApp para coordinar la entrega.</p>
+      <div class="grid">
+        <div class="full"><label for="f_nombre">Nombre completo *</label><input id="f_nombre" autocomplete="name" required></div>
+        <div><label for="f_doc">Cédula / documento *</label><input id="f_doc" inputmode="numeric" required></div>
+        <div><label for="f_tel">Celular / WhatsApp *</label><input id="f_tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="3001234567" required></div>
+        <div class="full"><label for="f_mail">Correo electrónico</label><input id="f_mail" type="email" autocomplete="email"></div>
+        <div><label for="f_dep">Departamento *</label><input id="f_dep" autocomplete="address-level1" required></div>
+        <div><label for="f_ciu">Ciudad / municipio *</label><input id="f_ciu" autocomplete="address-level2" required></div>
+        <div class="full"><label for="f_dir">Dirección de entrega *</label><input id="f_dir" autocomplete="street-address" placeholder="Calle / carrera, número, torre, apto…" required></div>
+        <div class="full"><label for="f_barrio">Barrio / indicaciones adicionales</label><textarea id="f_barrio" placeholder="Barrio, punto de referencia, horario para recibir…"></textarea></div>
+        <div class="full"><label class="consent"><input type="checkbox" id="f_ok"> Autorizo a COLUNCER a usar estos datos únicamente para gestionar el envío de mi pedido. *</label></div>
+      </div>
+      <p class="err" id="shipErr"></p>
+      <div class="actions"><button class="btn btn-lime" type="submit" id="shipBtn">Enviar datos de envío por WhatsApp</button></div>
+      <div class="done" id="shipDone">Abrimos WhatsApp con tus datos de envío. Solo presiona <b>Enviar</b> en esa conversación y listo. ¡Gracias!</div>
+    </form>
+    <!--/IF_APROBADO-->
+
+    <div class="actions" id="mainActions">{{ACTIONS}}</div>
+  </section>
+</div></main>
+
+<script>
+(function(){
+  var STATE = "{{STATE}}", WA = "{{WA}}";
+  var q = new URLSearchParams(location.search);
+  var ref = (q.get("ref") || "").replace(/[^A-Za-z0-9_-]/g,"").slice(0,80);
+  var cop = function(n){ return "$" + Math.round(n).toLocaleString("es-CO"); };
+  var esc = function(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); };
+
+  if (ref) { document.getElementById("refBox").style.display = "inline-block"; document.getElementById("refTxt").textContent = ref; }
+  if (STATE === "rechazado" && q.get("cancelado")) {
+    document.getElementById("lead").textContent = "Cerraste la ventana de pago antes de terminar, por eso no se realizó ningún cobro. Puedes intentarlo de nuevo cuando quieras.";
+  }
+
+  /* Resumen del pedido guardado en este navegador al momento de pagar */
+  var order = null;
+  try { var o = JSON.parse(localStorage.getItem("coluncer_last_order") || "null"); if (o && ref && o.ref === ref) order = o; } catch(e){}
+  if (order && STATE !== "rechazado") {
+    document.getElementById("orderLines").innerHTML = (order.lines || []).map(function(l){ return "<li>" + esc(l) + "</li>"; }).join("");
+    document.getElementById("orderTot").textContent = "Total pagado: " + cop(order.total || 0);
+    document.getElementById("orderBox").style.display = "block";
+  }
+
+  var form = document.getElementById("shipForm");
+  if (!form) return;
+  var g = function(id){ return document.getElementById(id).value.trim(); };
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var err = document.getElementById("shipErr"); err.style.display = "none";
+    var tel = g("f_tel").replace(/\D/g,"");
+    var missing = ["f_nombre","f_doc","f_tel","f_dep","f_ciu","f_dir"].filter(function(id){ return !g(id); });
+    var mail = g("f_mail");
+    var problem = missing.length ? "Completa los campos marcados con *."
+      : (tel.length < 10 || tel.length > 12) ? "Revisa tu número de celular (10 dígitos)."
+      : (mail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) ? "Revisa tu correo electrónico."
+      : !document.getElementById("f_ok").checked ? "Debes autorizar el uso de tus datos para gestionar el envío."
+      : "";
+    if (problem) { err.textContent = problem; err.style.display = "block"; return; }
+
+    var msg = "¡Hola COLUNCER! Ya pagué mi pedido por Wompi. Estos son mis datos de envío:\n\n"
+      + (ref ? "Referencia: " + ref + "\n" : "")
+      + (order ? (order.lines || []).map(function(l){ return "• " + l; }).join("\n") + "\nTotal pagado: " + cop(order.total || 0) + "\n" : "")
+      + "\nNombre: " + g("f_nombre")
+      + "\nDocumento: " + g("f_doc")
+      + "\nCelular: " + g("f_tel")
+      + (mail ? "\nCorreo: " + mail : "")
+      + "\nDepartamento: " + g("f_dep")
+      + "\nCiudad: " + g("f_ciu")
+      + "\nDirección: " + g("f_dir")
+      + (g("f_barrio") ? "\nIndicaciones: " + g("f_barrio") : "");
+    window.open("https://wa.me/" + WA + "?text=" + encodeURIComponent(msg), "_blank");
+    document.getElementById("shipDone").style.display = "block";
+    document.getElementById("shipBtn").textContent = "Enviar de nuevo por WhatsApp";
+  });
+})();
+</script>
+</body>
+</html>

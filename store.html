@@ -180,7 +180,7 @@ const TECH_DISCOUNT = 0.10;
 
 /* Reemplaza esta llave por tu llave PÚBLICA de Wompi (pub_test_... o pub_prod_...). Nunca uses aquí tu llave privada. */
 const WOMPI_PUBLIC_KEY = "pub_prod_qG1vdv56bfEcM7eoDNGoceCHSMVDUS8l";
-const WOMPI_REDIRECT_URL = window.location.origin + window.location.pathname;
+const WOMPI_REDIRECT_URL = window.location.origin + "/pago-resultado"; /* Wompi regresa aquí con ?id=… y el servidor redirige según el resultado */
 
 const cop = copFmt;
 let CAT = [];
@@ -300,7 +300,7 @@ async function payWithWompi(p, amount){
     alert("Falta configurar la llave pública de Wompi para activar los pagos en línea.");
     return;
   }
-  const ref = `${p.id}-${Date.now()}`;
+  const ref = `P${p.id}-${Date.now()}`;
   const amountInCents = amount * 100;
   const btn = document.getElementById("pmWompi");
   const originalLabel = btn ? btn.textContent : "";
@@ -328,9 +328,17 @@ async function payWithWompi(p, amount){
   };
   if(signature) checkoutConfig.signature = { integrity: signature };
 
+  /* Pedido guardado en este navegador para mostrarlo en la página de gracias */
+  try{ localStorage.setItem("coluncer_last_order", JSON.stringify({ref, lines:[`1x ${p.name} — ${cop(amount)}`], total:amount, ts:Date.now()})); }catch(e){}
+
   const checkout = new WidgetCheckout(checkoutConfig);
   checkout.open(function(result){
-    console.log(result.transaction);
+    const tx = result && result.transaction;
+    if(tx && tx.id){
+      location.href = "/pago-resultado?id=" + encodeURIComponent(tx.id);
+    }else{ /* cerró el checkout sin completar el pago */
+      location.href = "/gracias-rechazado?cancelado=1&ref=" + encodeURIComponent(ref);
+    }
   });
 }
 

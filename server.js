@@ -75,6 +75,74 @@ app.post("/api/wompi-signature", rateLimit, express.json({ limit: "2kb" }), (req
 
 app.use("/api", (req, res) => res.status(404).json({ error: "No encontrado." }));
 
+/* ---- Resultado del pago: Wompi → /pago-resultado → /gracias-aprobado | -pendiente | -rechazado ----
+   Wompi devuelve al cliente a la URL de retorno con ?id=<id de transacción>. Aquí consultamos el
+   estado REAL a la API de Wompi (no confiamos en lo que diga el navegador) y redirigimos. */
+const fs = require("fs");
+const WOMPI_API_BASE = process.env.WOMPI_API_BASE || "https://production.wompi.co/v1";
+const WHATSAPP = /^\d{10,15}$/.test(process.env.WHATSAPP_NUMBER || "") ? process.env.WHATSAPP_NUMBER : "573016315921";
+const TX_ID_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/;
+
+const RESULT_PAGES = {
+  aprobado: {
+    icon: "✓", title: "Gracias por tu compra",
+    lead: "Tu pago fue aprobado. Ya estamos preparando tu pedido: completa tus datos de envío aquí abajo para que podamos despacharlo.",
+    actions: '<a class="btn btn-ink" href="/store.html">Seguir comprando</a>'
+  },
+  pendiente: {
+    icon: "…", title: "Estamos confirmando tu pago",
+    lead: "Tu pago está en proceso de verificación. Puede tardar unos minutos (más si pagaste por PSE o en efectivo). Te avisaremos apenas Wompi lo confirme. Por favor no vuelvas a pagar, para evitar un cobro doble.",
+    actions: '<a class="btn btn-lime" href="https://wa.me/{{WA}}" target="_blank" rel="noopener">Escribirnos por WhatsApp</a><a class="btn btn-ink" href="/">Volver al inicio</a>'
+  },
+  rechazado: {
+    icon: "✕", title: "Tu pago no fue aprobado",
+    lead: "No se pudo completar el cobro. Puedes intentarlo de nuevo o con otro medio de pago. Si crees que te descontaron el dinero, escríbenos y lo revisamos contigo.",
+    actions: '<a class="btn btn-lime" href="/store.html">Intentar de nuevo</a><a class="btn btn-ink" href="https://wa.me/{{WA}}" target="_blank" rel="noopener">Escribirnos por WhatsApp</a>'
+  }
+};
+const GRACIAS_TEMPLATE = fs.readFileSync(path.join(ROOT, "gracias.html"), "utf8");
+
+function renderGracias(state) {
+  const c = RESULT_PAGES[state];
+  let html = GRACIAS_TEMPLATE;
+  if (state !== "aprobado") html = html.replace(/<!--IF_APROBADO-->[\s\S]*?<!--\/IF_APROBADO-->/, "");
+  return html
+    .replace("{{ACTIONS}}", c.actions)
+    .replace(/{{STATE}}/g, state).replace(/{{TITLE}}/g, c.title)
+    .replace("{{ICON}}", c.icon).replace("{{LEAD}}", c.lead)
+    .replace(/{{WA}}/g, WHATSAPP);
+}
+for (const state of Object.keys(RESULT_PAGES)) {
+  app.get(`/gracias-${state}`, (req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+    res.type("html").send(renderGracias(state));
+  });
+}
+
+/* APPROVED → aprobado · PENDING → pendiente · DECLINED / VOIDED / ERROR → rechazado.
+   Si no se puede confirmar (Wompi no responde, id raro) → pendiente, nunca "aprobado". */
+function stateFromWompi(status) {
+  if (status === "APPROVED") return "aprobado";
+  if (status === "DECLINED" || status === "VOIDED" || status === "ERROR") return "rechazado";
+  return "pendiente";
+}
+app.get("/pago-resultado", async (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  const id = String(req.query.id || "");
+  if (!TX_ID_PATTERN.test(id)) return res.redirect(302, "/gracias-pendiente");
+  try {
+    const r = await fetch(`${WOMPI_API_BASE}/transactions/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error(`Wompi respondió ${r.status}`);
+    const { data } = await r.json();
+    const ref = typeof data?.reference === "string" && REFERENCE_PATTERN.test(data.reference) ? data.reference : "";
+    const qs = new URLSearchParams(ref ? { ref } : {}).toString();
+    return res.redirect(302, `/gracias-${stateFromWompi(data?.status)}${qs ? "?" + qs : ""}`);
+  } catch (e) {
+    console.error("No se pudo consultar la transacción", id, e.message);
+    return res.redirect(302, "/gracias-pendiente");
+  }
+});
+
 /* ---- Archivos públicos (lista explícita: server.js, package.json, etc. nunca se exponen) ---- */
 const page = (file, extra) => (req, res) => {
   if (extra) extra(res);

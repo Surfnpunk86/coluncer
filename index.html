@@ -865,7 +865,7 @@ document.getElementById("ditems").addEventListener("click",e=>{
 /* IMPORTANTE: reemplaza esta llave por tu llave PÚBLICA de Wompi (empieza por pub_test_ o pub_prod_).
    La llave pública es segura de exponer en el navegador: NUNCA coloques aquí tu llave privada ni tu secreto de integridad. */
 const WOMPI_PUBLIC_KEY = "pub_prod_qG1vdv56bfEcM7eoDNGoceCHSMVDUS8l";
-const WOMPI_REDIRECT_URL = window.location.origin + window.location.pathname;
+const WOMPI_REDIRECT_URL = window.location.origin + "/pago-resultado"; /* Wompi regresa aquí con ?id=… y el servidor redirige según el resultado */
 
 const pOverlay=document.getElementById("poverlay"), pModal=document.getElementById("pmodal"), pBody=document.getElementById("pmodalBody");
 function openProduct(id){
@@ -902,8 +902,10 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeProduct(); })
 
 const WOMPI_SIGNATURE_ENDPOINT = "/api/wompi-signature"; /* mismo dominio: lo atiende server.js */
 
-/* Abre el widget de Wompi. Pide primero la firma de integridad al servicio en Vercel. */
-async function openWompi({reference, amountInCents, button, busyLabel, onApproved}){
+/* Abre el widget de Wompi (pide antes la firma de integridad a nuestro servidor).
+   Al terminar —pague o no— la persona SIEMPRE cae en una página nuestra:
+   /pago-resultado consulta el estado real y redirige a gracias-aprobado / -pendiente / -rechazado. */
+async function openWompi({reference, amountInCents, button, busyLabel, order}){
   if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){
     alert("Falta configurar la llave pública de Wompi. Mientras tanto, puedes coordinar tu compra por WhatsApp.");
     return;
@@ -927,40 +929,42 @@ async function openWompi({reference, amountInCents, button, busyLabel, onApprove
 
   if(button){ button.disabled = false; button.textContent = original; }
 
+  /* Guardamos el pedido en este navegador para mostrarlo en la página de gracias */
+  try{ localStorage.setItem("coluncer_last_order", JSON.stringify({ref:reference, lines:order.lines, total:order.total, ts:Date.now()})); }catch(e){}
+
   const cfg = {currency:"COP", amountInCents, reference, publicKey:WOMPI_PUBLIC_KEY, redirectUrl:WOMPI_REDIRECT_URL};
   if(signature) cfg.signature = {integrity: signature};
   new WidgetCheckout(cfg).open(function(result){
     const tx = result && result.transaction;
-    if(tx && tx.status === "APPROVED" && onApproved) onApproved(tx);
+    if(tx && tx.id){
+      location.href = "/pago-resultado?id=" + encodeURIComponent(tx.id);
+    }else{ /* cerró el checkout sin completar el pago */
+      location.href = "/gracias-rechazado?cancelado=1&ref=" + encodeURIComponent(reference);
+    }
   });
 }
 
 /* Pago de un solo producto (desde la ficha) */
 function payWithWompi(p,amount){
-  const ref = `P${p.id}-${Date.now()}`;
   openWompi({
-    reference: ref, amountInCents: amount*100,
+    reference: `P${p.id}-${Date.now()}`, amountInCents: amount*100,
     button: document.getElementById("pmWompi"),
-    onApproved: ()=> window.open(waUrl(`¡Hola COLUNCER! Pagué ${p.name} por Wompi.\nReferencia: ${ref}\nTotal: ${cop(amount)}`),"_blank")
+    order: {lines:[`1x ${p.name} — ${cop(amount)}`], total: amount}
   });
 }
 
 /* Pago de todo el carrito */
 function payCart(){
   const ids = Object.keys(cart); if(!ids.length) return;
-  let total = 0, lines = "";
+  let total = 0; const lines = [];
   ids.forEach(id=>{
     const p = CAT.find(x=>x.id==id), sub = discPrice(p)*cart[id];
-    total += sub; lines += `• ${cart[id]}x ${p.name} — ${cop(sub)}\n`;
+    total += sub; lines.push(`${cart[id]}x ${p.name} — ${cop(sub)}`);
   });
-  const ref = `C${Date.now()}`;
   openWompi({
-    reference: ref, amountInCents: total*100,
+    reference: `C${Date.now()}`, amountInCents: total*100,
     button: document.getElementById("payCart"),
-    onApproved: ()=>{
-      cart = {}; sync(); close();
-      window.open(waUrl(`¡Hola COLUNCER! Pagué mi pedido por Wompi:\n\n${lines}\nTotal: ${cop(total)}\nReferencia: ${ref}\n\nQuedo atento a la coordinación de entrega.`),"_blank");
-    }
+    order: {lines, total}
   });
 }
 document.getElementById("payCart").onclick = payCart;
