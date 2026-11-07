@@ -72,10 +72,10 @@ textarea{resize:vertical;min-height:70px}
 
     <div class="order" id="orderBox"><h2>Tu pedido</h2><ul id="orderLines"></ul><div class="tot" id="orderTot"></div></div>
 
-    <!--IF_APROBADO-->
+    <!--IF_FORM-->
     <form class="ship" id="shipForm" novalidate>
       <h2>¿A dónde enviamos tu pedido?</h2>
-      <p class="sub">Déjanos tus datos de envío y te escribimos por WhatsApp para coordinar la entrega.</p>
+      <p class="sub">{{FORM_SUB}}</p>
       <div class="grid">
         <div class="full"><label for="f_nombre">Nombre completo *</label><input id="f_nombre" autocomplete="name" required></div>
         <div><label for="f_doc">Cédula / documento *</label><input id="f_doc" inputmode="numeric" required></div>
@@ -88,10 +88,10 @@ textarea{resize:vertical;min-height:70px}
         <div class="full"><label class="consent"><input type="checkbox" id="f_ok"> Autorizo a COLUNCER a usar estos datos únicamente para gestionar el envío de mi pedido. *</label></div>
       </div>
       <p class="err" id="shipErr"></p>
-      <div class="actions"><button class="btn btn-lime" type="submit" id="shipBtn">Enviar datos de envío por WhatsApp</button></div>
-      <div class="done" id="shipDone">Abrimos WhatsApp con tus datos de envío. Solo presiona <b>Enviar</b> en esa conversación y listo. ¡Gracias!</div>
+      <div class="actions"><button class="btn btn-lime" type="submit" id="shipBtn">Enviar datos de envío</button></div>
+      <div class="done" id="shipDone"></div>
     </form>
-    <!--/IF_APROBADO-->
+    <!--/IF_FORM-->
 
     <div class="actions" id="mainActions">{{ACTIONS}}</div>
   </section>
@@ -101,6 +101,7 @@ textarea{resize:vertical;min-height:70px}
 (function(){
   var STATE = "{{STATE}}", WA = "{{WA}}";
   var q = new URLSearchParams(location.search);
+  var txId = (q.get("id") || "").replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);
   var ref = (q.get("ref") || "").replace(/[^A-Za-z0-9_-]/g,"").slice(0,80);
   var cop = function(n){ return "$" + Math.round(n).toLocaleString("es-CO"); };
   var esc = function(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); };
@@ -135,9 +136,10 @@ textarea{resize:vertical;min-height:70px}
       : "";
     if (problem) { err.textContent = problem; err.style.display = "block"; return; }
 
-    var msg = "¡Hola COLUNCER! Ya pagué mi pedido por Wompi. Estos son mis datos de envío:\n\n"
+    var paid = STATE === "aprobado" ? "Ya pagué mi pedido por Wompi" : "Hice el pago de mi pedido por Wompi (está pendiente de confirmación)";
+    var msg = "¡Hola COLUNCER! " + paid + ". Estos son mis datos de envío:\n\n"
       + (ref ? "Referencia: " + ref + "\n" : "")
-      + (order ? (order.lines || []).map(function(l){ return "• " + l; }).join("\n") + "\nTotal pagado: " + cop(order.total || 0) + "\n" : "")
+      + (order ? (order.lines || []).map(function(l){ return "• " + l; }).join("\n") + "\nTotal: " + cop(order.total || 0) + "\n" : "")
       + "\nNombre: " + g("f_nombre")
       + "\nDocumento: " + g("f_doc")
       + "\nCelular: " + g("f_tel")
@@ -146,9 +148,28 @@ textarea{resize:vertical;min-height:70px}
       + "\nCiudad: " + g("f_ciu")
       + "\nDirección: " + g("f_dir")
       + (g("f_barrio") ? "\nIndicaciones: " + g("f_barrio") : "");
-    window.open("https://wa.me/" + WA + "?text=" + encodeURIComponent(msg), "_blank");
-    document.getElementById("shipDone").style.display = "block";
-    document.getElementById("shipBtn").textContent = "Enviar de nuevo por WhatsApp";
+    var waUrl = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
+
+    /* Abrir la pestaña ya (dentro del clic) para que el navegador no la bloquee; luego se le asigna WhatsApp */
+    var pop = window.open("", "_blank");
+    var btn = document.getElementById("shipBtn"), done = document.getElementById("shipDone");
+    btn.disabled = true; btn.textContent = "Enviando…";
+    var payload = { id: txId, nombre: g("f_nombre"), doc: g("f_doc"), tel: g("f_tel"), mail: mail, dep: g("f_dep"), ciu: g("f_ciu"),
+      dir: g("f_dir"), barrio: g("f_barrio"), consent: true, lines: order ? (order.lines || []) : [] };
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 15000);
+    fetch("/api/envio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .catch(function(){ return {}; })
+      .then(function(res){
+        clearTimeout(timer);
+        if (pop && !pop.closed) { pop.location.href = waUrl; } else { done.setAttribute("data-wa", waUrl); }
+        done.innerHTML = (res && res.emailed ? "✅ Recibimos tus datos por correo. " : "")
+          + "Se abrió WhatsApp con tus datos: <b>presiona Enviar</b> en esa conversación para terminar. "
+          + '<a href="' + esc(waUrl) + '" target="_blank" rel="noopener">¿No se abrió? Toca aquí</a>. ¡Gracias!';
+        done.style.display = "block";
+        btn.disabled = false; btn.textContent = "Enviar de nuevo";
+      });
   });
 })();
 </script>

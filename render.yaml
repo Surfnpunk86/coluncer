@@ -9,3 +9,9 @@ services:
       # Se pide al crear el servicio; pégalo en el panel de Render, no aquí.
       - key: WOMPI_INTEGRITY_SECRET
         sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: MAIL_TO
+        value: gerencia@coluncer.com
