@@ -236,6 +236,8 @@ app.get("/admin.html", page("admin.html", res => {
   res.setHeader("Cache-Control", "no-store");
 }));
 app.get("/products.js", page("products.js"));
+app.get("/theme.css", page("theme.css"));
+app.get("/theme.js", page("theme.js"));
 app.get("/products.json", page("products.json", res => res.setHeader("Cache-Control", "no-cache")));
 app.use("/images", express.static(path.join(ROOT, "images"), { dotfiles: "deny", index: false, maxAge: "7d" }));
 
