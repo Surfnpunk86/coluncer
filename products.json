@@ -37,5 +37,18 @@
     "bg": "linear-gradient(135deg,#0a0a0a,#1c1c1c)",
     "desc": "Parlante portátil Bluetooth BL AM-67, 50W de potencia y certificación sumergible IPX7, con asa de transporte reforzada. Mayor sonido y autonomía para exteriores.",
     "sourceUrl": ""
+  },
+  {
+    "id": 12,
+    "name": "J",
+    "by": "",
+    "cat": "General",
+    "price": 2000,
+    "discount": 0,
+    "badge": null,
+    "desc": "",
+    "sourceUrl": "",
+    "img": "",
+    "bg": "linear-gradient(135deg,#0a0a0a,#1c1c1c)"
   }
 ]
