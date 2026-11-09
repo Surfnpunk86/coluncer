@@ -43,21 +43,9 @@ h1{font-size:clamp(1.7rem,5vw,2.3rem);line-height:1.05;margin-bottom:12px}
 .order h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--M);margin-bottom:8px}
 .order li{list-style:none;padding:3px 0;color:var(--G)}
 .order .tot{margin-top:8px;font-weight:800;color:var(--K)}
-/* Formulario de envío */
-.ship{margin-top:26px;text-align:left;border-top:1px solid var(--LN);padding-top:26px}
-.ship h2{font-size:1.25rem;margin-bottom:6px}
-.ship .sub{color:var(--M);font-size:.88rem;margin-bottom:18px;line-height:1.5}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.grid .full{grid-column:1/-1}
-@media(max-width:560px){.grid{grid-template-columns:1fr}.card{padding:28px 20px}}
-label{display:block;font-size:.78rem;font-weight:700;color:var(--G);margin-bottom:5px}
-input,textarea{width:100%;padding:12px 13px;border:1px solid var(--LN);border-radius:10px;font:inherit;font-size:.92rem;background:#fff}
-input:focus,textarea:focus{outline:2px solid var(--V);outline-offset:1px;border-color:var(--V)}
-textarea{resize:vertical;min-height:70px}
-.consent{display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:var(--G);line-height:1.45;font-weight:500}
-.consent input{width:18px;height:18px;margin-top:2px;flex:none;accent-color:var(--V)}
-.err{color:var(--bad);font-size:.82rem;margin-top:10px;display:none}
-.done{display:none;margin-top:16px;background:#EAF7EF;border:1px solid #BfE5CF;color:#17653A;border-radius:12px;padding:14px 16px;font-size:.88rem;line-height:1.5}
+.btn-wa{background:#25D366;color:#fff}
+.track-note{margin-top:14px;font-size:.82rem;color:var(--M);line-height:1.5}
+@media(max-width:560px){.card{padding:28px 20px}}
 </style>
 <link rel="stylesheet" href="/theme.css">
 <script src="/theme.js"></script>
@@ -74,26 +62,7 @@ textarea{resize:vertical;min-height:70px}
 
     <div class="order" id="orderBox"><h2>Tu pedido</h2><ul id="orderLines"></ul><div class="tot" id="orderTot"></div></div>
 
-    <!--IF_FORM-->
-    <form class="ship" id="shipForm" novalidate>
-      <h2>¿A dónde enviamos tu pedido?</h2>
-      <p class="sub">{{FORM_SUB}}</p>
-      <div class="grid">
-        <div class="full"><label for="f_nombre">Nombre completo *</label><input id="f_nombre" autocomplete="name" required></div>
-        <div><label for="f_doc">Cédula / documento *</label><input id="f_doc" inputmode="numeric" required></div>
-        <div><label for="f_tel">Celular / WhatsApp *</label><input id="f_tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="3001234567" required></div>
-        <div class="full"><label for="f_mail">Correo electrónico</label><input id="f_mail" type="email" autocomplete="email"></div>
-        <div><label for="f_dep">Departamento *</label><input id="f_dep" autocomplete="address-level1" required></div>
-        <div><label for="f_ciu">Ciudad / municipio *</label><input id="f_ciu" autocomplete="address-level2" required></div>
-        <div class="full"><label for="f_dir">Dirección de entrega *</label><input id="f_dir" autocomplete="street-address" placeholder="Calle / carrera, número, torre, apto…" required></div>
-        <div class="full"><label for="f_barrio">Barrio / indicaciones adicionales</label><textarea id="f_barrio" placeholder="Barrio, punto de referencia, horario para recibir…"></textarea></div>
-        <div class="full"><label class="consent"><input type="checkbox" id="f_ok"> Autorizo a COLUNCER a usar estos datos únicamente para gestionar el envío de mi pedido. *</label></div>
-      </div>
-      <p class="err" id="shipErr"></p>
-      <div class="actions"><button class="btn btn-lime" type="submit" id="shipBtn">Enviar datos de envío</button></div>
-      <div class="done" id="shipDone"></div>
-    </form>
-    <!--/IF_FORM-->
+    
 
     <div class="actions" id="mainActions">{{ACTIONS}}</div>
   </section>
@@ -108,71 +77,34 @@ textarea{resize:vertical;min-height:70px}
   var cop = function(n){ return "$" + Math.round(n).toLocaleString("es-CO"); };
   var esc = function(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); };
 
+  /* Pedido guardado en este navegador al pagar (válido 24 h). Si la URL no trae ref, se usa el último pedido reciente. */
+  var order = null;
+  try {
+    var o = JSON.parse(localStorage.getItem("coluncer_last_order") || "null");
+    if (o && (Date.now() - (o.ts || 0)) < 864e5 && (!ref || o.ref === ref)) { order = o; if (!ref && o.ref) ref = String(o.ref).replace(/[^A-Za-z0-9_-]/g,"").slice(0,80); }
+  } catch(e){}
+  var who = ""; try { var sh = JSON.parse(localStorage.getItem("coluncer_ship") || "null"); if (sh && sh.nombre) who = String(sh.nombre); } catch(e){}
+
   if (ref) { document.getElementById("refBox").style.display = "inline-block"; document.getElementById("refTxt").textContent = ref; }
   if (STATE === "rechazado" && q.get("cancelado")) {
     document.getElementById("lead").textContent = "Cerraste la ventana de pago antes de terminar, por eso no se realizó ningún cobro. Puedes intentarlo de nuevo cuando quieras.";
   }
-
-  /* Resumen del pedido guardado en este navegador al momento de pagar */
-  var order = null;
-  try { var o = JSON.parse(localStorage.getItem("coluncer_last_order") || "null"); if (o && ref && o.ref === ref) order = o; } catch(e){}
   if (order && STATE !== "rechazado") {
     document.getElementById("orderLines").innerHTML = (order.lines || []).map(function(l){ return "<li>" + esc(l) + "</li>"; }).join("");
-    document.getElementById("orderTot").textContent = "Total pagado: " + cop(order.total || 0);
+    document.getElementById("orderTot").textContent = (STATE === "aprobado" ? "Total pagado: " : "Total: ") + cop(order.total || 0);
     document.getElementById("orderBox").style.display = "block";
   }
 
-  var form = document.getElementById("shipForm");
-  if (!form) return;
-  var g = function(id){ return document.getElementById(id).value.trim(); };
-  form.addEventListener("submit", function(e){
-    e.preventDefault();
-    var err = document.getElementById("shipErr"); err.style.display = "none";
-    var tel = g("f_tel").replace(/\D/g,"");
-    var missing = ["f_nombre","f_doc","f_tel","f_dep","f_ciu","f_dir"].filter(function(id){ return !g(id); });
-    var mail = g("f_mail");
-    var problem = missing.length ? "Completa los campos marcados con *."
-      : (tel.length < 10 || tel.length > 12) ? "Revisa tu número de celular (10 dígitos)."
-      : (mail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) ? "Revisa tu correo electrónico."
-      : !document.getElementById("f_ok").checked ? "Debes autorizar el uso de tus datos para gestionar el envío."
-      : "";
-    if (problem) { err.textContent = problem; err.style.display = "block"; return; }
-
-    var paid = STATE === "aprobado" ? "Ya pagué mi pedido por Wompi" : "Hice el pago de mi pedido por Wompi (está pendiente de confirmación)";
-    var msg = "¡Hola COLUNCER! " + paid + ". Estos son mis datos de envío:\n\n"
-      + (ref ? "Referencia: " + ref + "\n" : "")
-      + (order ? (order.lines || []).map(function(l){ return "• " + l; }).join("\n") + "\nTotal: " + cop(order.total || 0) + "\n" : "")
-      + "\nNombre: " + g("f_nombre")
-      + "\nDocumento: " + g("f_doc")
-      + "\nCelular: " + g("f_tel")
-      + (mail ? "\nCorreo: " + mail : "")
-      + "\nDepartamento: " + g("f_dep")
-      + "\nCiudad: " + g("f_ciu")
-      + "\nDirección: " + g("f_dir")
-      + (g("f_barrio") ? "\nIndicaciones: " + g("f_barrio") : "");
-    var waUrl = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
-
-    /* Abrir la pestaña ya (dentro del clic) para que el navegador no la bloquee; luego se le asigna WhatsApp */
-    var pop = window.open("", "_blank");
-    var btn = document.getElementById("shipBtn"), done = document.getElementById("shipDone");
-    btn.disabled = true; btn.textContent = "Enviando…";
-    var payload = { id: txId, nombre: g("f_nombre"), doc: g("f_doc"), tel: g("f_tel"), mail: mail, dep: g("f_dep"), ciu: g("f_ciu"),
-      dir: g("f_dir"), barrio: g("f_barrio"), consent: true, lines: order ? (order.lines || []) : [] };
-    var ctrl = window.AbortController ? new AbortController() : null;
-    var timer = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 15000);
-    fetch("/api/envio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
-      .then(function(r){ return r.json().catch(function(){ return {}; }); })
-      .catch(function(){ return {}; })
-      .then(function(res){
-        clearTimeout(timer);
-        if (pop && !pop.closed) { pop.location.href = waUrl; } else { done.setAttribute("data-wa", waUrl); }
-        done.innerHTML = (res && res.emailed ? "✅ Recibimos tus datos por correo. " : "")
-          + "Se abrió WhatsApp con tus datos: <b>presiona Enviar</b> en esa conversación para terminar. "
-          + '<a href="' + esc(waUrl) + '" target="_blank" rel="noopener">¿No se abrió? Toca aquí</a>. ¡Gracias!';
-        done.style.display = "block";
-        btn.disabled = false; btn.textContent = "Enviar de nuevo";
-      });
-  });
+  /* Enlace "Rastrear mi pedido por WhatsApp" con la referencia ya escrita */
+  var links = document.querySelectorAll("a[data-track]");
+  if (links.length) {
+    var msg = "¡Hola COLUNCER! Quiero rastrear mi pedido" + (ref ? " con referencia " + ref : "") + "."
+      + (who ? "\nNombre: " + who : "")
+      + (order ? "\n" + (order.lines || []).map(function(l){ return "• " + l; }).join("\n") + "\nTotal: " + cop(order.total || 0) : "")
+      + (txId ? "\nTransacción Wompi: " + txId : "");
+    var url = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
+    for (var i = 0; i < links.length; i++) { links[i].href = url; links[i].target = "_blank"; links[i].rel = "noopener"; }
+  }
 })();
 </script>
 </body>

@@ -409,6 +409,7 @@ button{cursor:pointer;font-family:inherit}
 </style>
 <link rel="stylesheet" href="/theme.css">
 <script src="/theme.js"></script>
+<script src="/checkout.js"></script>
 </head>
 <body>
 
@@ -904,10 +905,20 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeProduct(); })
 
 const WOMPI_SIGNATURE_ENDPOINT = "/api/wompi-signature"; /* mismo dominio: lo atiende server.js */
 
+/* Datos que Wompi muestra ya llenos en su ventana de pago */
+function wompiPrefill(c){
+  const tel = String(c.tel||"").replace(/\D/g,"").slice(-10);
+  const cfg = {
+    customerData: Object.assign({fullName:c.nombre, phoneNumber:tel, phoneNumberPrefix:"+57", legalId:c.doc, legalIdType:"CC"}, c.mail ? {email:c.mail} : {}),
+    shippingAddress: {addressLine1:c.dir, city:c.ciu, phoneNumber:tel, region:c.dep, country:"CO"}
+  };
+  return cfg;
+}
+
 /* Abre el widget de Wompi (pide antes la firma de integridad a nuestro servidor).
    Al terminar —pague o no— la persona SIEMPRE cae en una página nuestra:
    /pago-resultado consulta el estado real y redirige a gracias-aprobado / -pendiente / -rechazado. */
-async function openWompi({reference, amountInCents, button, busyLabel, order}){
+async function openWompi({reference, amountInCents, button, busyLabel, order, customer}){
   if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){
     alert("Falta configurar la llave pública de Wompi. Mientras tanto, puedes coordinar tu compra por WhatsApp.");
     return;
@@ -923,23 +934,26 @@ async function openWompi({reference, amountInCents, button, busyLabel, order}){
   try{
     const res = await fetch(WOMPI_SIGNATURE_ENDPOINT, {
       method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({reference, amountInCents, currency:"COP"})
+      body: JSON.stringify({reference, amountInCents, currency:"COP", items: order.items || [], customer})
     });
     const data = await res.json();
     if(res.ok && data.signature) signature = data.signature;
   }catch(e){ /* sin firma: ver nota en WOMPI_SIGNATURE_ENDPOINT */ }
 
   if(button){ button.disabled = false; button.textContent = original; }
+  if(!signature){
+    alert("No pudimos preparar el pago seguro en este momento. Inténtalo de nuevo en unos minutos o escríbenos por WhatsApp para coordinar tu compra.");
+    return;
+  }
 
   /* Guardamos el pedido en este navegador para mostrarlo en la página de gracias */
   try{ localStorage.setItem("coluncer_last_order", JSON.stringify({ref:reference, lines:order.lines, total:order.total, ts:Date.now()})); }catch(e){}
 
-  const cfg = {currency:"COP", amountInCents, reference, publicKey:WOMPI_PUBLIC_KEY, redirectUrl:WOMPI_REDIRECT_URL};
-  if(signature) cfg.signature = {integrity: signature};
+  const cfg = Object.assign({currency:"COP", amountInCents, reference, publicKey:WOMPI_PUBLIC_KEY, redirectUrl:WOMPI_REDIRECT_URL, signature:{integrity: signature}}, wompiPrefill(customer));
   new WidgetCheckout(cfg).open(function(result){
     const tx = result && result.transaction;
     if(tx && tx.id){
-      location.href = "/pago-resultado?id=" + encodeURIComponent(tx.id);
+      location.href = "/pago-resultado?id=" + encodeURIComponent(tx.id) + "&ref=" + encodeURIComponent(reference);
     }else{ /* cerró el checkout sin completar el pago */
       location.href = "/gracias-rechazado?cancelado=1&ref=" + encodeURIComponent(reference);
     }
@@ -947,26 +961,31 @@ async function openWompi({reference, amountInCents, button, busyLabel, order}){
 }
 
 /* Pago de un solo producto (desde la ficha) */
-function payWithWompi(p,amount){
-  openWompi({
+async function payWithWompi(p,amount){
+  const lines = [`1x ${p.name} — ${cop(amount)}`];
+  const customer = await CheckoutShip.ask({lines, total: amount});   /* 1) datos de envío */
+  if(!customer) return;
+  openWompi({                                                          /* 2) pago */
     reference: `P${p.id}-${Date.now()}`, amountInCents: amount*100,
-    button: document.getElementById("pmWompi"),
-    order: {lines:[`1x ${p.name} — ${cop(amount)}`], total: amount}
+    button: document.getElementById("pmWompi"), customer,
+    order: {lines, total: amount, items:[{name:p.name, qty:1, unit:amount}]}
   });
 }
 
 /* Pago de todo el carrito */
-function payCart(){
+async function payCart(){
   const ids = Object.keys(cart); if(!ids.length) return;
-  let total = 0; const lines = [];
+  let total = 0; const lines = [], items = [];
   ids.forEach(id=>{
     const p = CAT.find(x=>x.id==id), sub = discPrice(p)*cart[id];
-    total += sub; lines.push(`${cart[id]}x ${p.name} — ${cop(sub)}`);
+    total += sub; lines.push(`${cart[id]}x ${p.name} — ${cop(sub)}`); items.push({name:p.name, qty:cart[id], unit:discPrice(p)});
   });
-  openWompi({
+  const customer = await CheckoutShip.ask({lines, total});            /* 1) datos de envío */
+  if(!customer) return;
+  openWompi({                                                          /* 2) pago */
     reference: `C${Date.now()}`, amountInCents: total*100,
-    button: document.getElementById("payCart"),
-    order: {lines, total}
+    button: document.getElementById("payCart"), customer,
+    order: {lines, total, items}
   });
 }
 document.getElementById("payCart").onclick = payCart;

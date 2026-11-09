@@ -105,6 +105,76 @@ header{position:sticky;top:0;z-index:30;background:var(--K);color:#fff;padding:1
 .helpbox h3{font-size:.95rem;margin-bottom:8px}
 .helpbox code{background:var(--B);padding:2px 6px;border-radius:5px;font-size:.82em}
 .helpbox ol{margin:8px 0 0 18px}
+
+/* ---- PESTAÑAS ---- */
+.tabs{display:flex;gap:6px;max-width:1200px;margin:0 auto;padding:14px 24px 0}
+.tab{padding:10px 20px;border-radius:100px;border:1px solid var(--LN);background:#fff;color:var(--G);font-weight:700;font-size:.88rem;cursor:pointer}
+.tab.on{background:var(--K);color:#fff;border-color:var(--K)}
+body.t-app .tab.on{background:var(--L);color:#15171F;border-color:var(--L)}
+
+/* ---- VENTAS ---- */
+.vbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.vbar select,.vbar input{padding:10px 14px;border:1px solid var(--LN);border-radius:100px;font-size:.84rem;font-weight:600;background:#fff;font-family:inherit}
+.vbar input[type=search]{min-width:220px;flex:1;max-width:320px}
+.vbar .vspacer{flex:1}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:#fff;border:1px solid var(--LN);border-radius:20px;padding:18px 20px}
+@media(max-width:600px){.kpis{grid-template-columns:1fr 1fr}.kpi.kpi-hi{grid-column:1/-1}.kpi .kv{font-size:1.3rem}}
+.kpi .kl{font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--M)}
+.kpi .kv{font-size:1.65rem;font-weight:700;letter-spacing:-.04em;margin-top:6px;line-height:1.1}
+.kpi .ks{font-size:.78rem;color:var(--M);margin-top:4px}
+.kpi.kpi-hi{background:var(--L);border-color:var(--L);color:#15171F}
+.kpi.kpi-hi .kl,.kpi.kpi-hi .ks{color:rgba(21,23,31,.65)}
+.vgrid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:900px){.vgrid{grid-template-columns:1fr}}
+.vcard{background:#fff;border:1px solid var(--LN);border-radius:20px;padding:20px 22px}
+.vcard h3{font-size:.95rem;margin-bottom:12px}
+.chart{width:100%;height:auto;display:block}
+.chart .bar{fill:var(--V);transition:opacity .2s}
+.chart .bar:hover{opacity:.7}
+.chart text{font-size:10px;fill:var(--M);font-family:inherit}
+.toplist{list-style:none;display:flex;flex-direction:column;gap:10px}
+.toplist li{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;align-items:baseline}
+.toplist .tn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toplist .tq{color:var(--M);font-size:.78rem;white-space:nowrap}
+.empty-note{color:var(--M);font-size:.86rem;padding:18px 0}
+.tablewrap{background:#fff;border:1px solid var(--LN);border-radius:20px;overflow:auto}
+table.sales{width:100%;border-collapse:collapse;font-size:.84rem;min-width:860px}
+table.sales th{text-align:left;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--M);padding:12px 14px;border-bottom:1px solid var(--LN);white-space:nowrap}
+table.sales td{padding:12px 14px;border-bottom:1px solid var(--LN);vertical-align:middle}
+table.sales tr.srow{cursor:pointer}
+table.sales tr.srow:hover td{background:rgba(120,120,140,.07)}
+table.sales tr:last-child td{border-bottom:0}
+table.sales .num{text-align:right;font-weight:700;white-space:nowrap}
+.sub{color:var(--M);font-size:.76rem}
+.badge{display:inline-block;padding:4px 10px;border-radius:100px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.b-APPROVED,.b-entregado{background:#E3F6EA;color:#17653A}
+.b-PENDING,.b-preparando{background:#FDF1D8;color:#8A5A0B}
+.b-DECLINED,.b-ERROR{background:#FBE3E0;color:#A12B1E}
+.b-VOIDED,.b-cancelado{background:#ECECEF;color:#5B5B63}
+.b-nuevo{background:#E2ECFD;color:#1F4FB5}
+.b-enviado{background:#EBE4FB;color:#5334B8}
+.b-manual{background:#ECECEF;color:#5B5B63}
+.fsel{padding:6px 8px;border:1px solid var(--LN);border-radius:8px;font-size:.78rem;font-weight:600;background:#fff;font-family:inherit}
+.vmsg{padding:30px;text-align:center;color:var(--M);font-size:.92rem;line-height:1.6}
+.vmsg b{color:var(--K)}
+.dgroup{border:1px solid var(--LN);border-radius:14px;padding:14px 16px}
+.dgroup h4{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--M);margin-bottom:8px;font-family:inherit}
+.dl{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:.86rem}
+.dl dt{color:var(--M)}.dl dd{word-break:break-word}
+.itl{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:.86rem}
+.itl li{display:flex;justify-content:space-between;gap:10px}
+.mini{font-size:.78rem;font-weight:700;padding:8px 12px;border-radius:100px;border:1px solid var(--LN);background:#fff;cursor:pointer;color:var(--K);text-decoration:none;display:inline-block}
+.mini:hover{border-color:var(--V)}
+.mini.danger:hover{border-color:#c0392b;color:#c0392b}
+.itrow{display:grid;grid-template-columns:1fr 64px 110px 30px;gap:8px;margin-bottom:8px}
+.itrow input{width:100%;padding:10px;border:1px solid var(--LN);border-radius:9px;font-size:.86rem}
+.itrow button{border:0;background:none;font-size:1.1rem;color:var(--M);cursor:pointer}
+.editor:not(.on){box-shadow:none;visibility:hidden;transition:.3s cubic-bezier(.22,1,.36,1),visibility 0s .3s}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#15171F;color:#fff;padding:12px 20px;border-radius:100px;font-size:.86rem;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:.3s}
+.toast.on{opacity:1}
+.gate2{display:grid;gap:0}
+.mini.primary{background:var(--L);border-color:var(--L);color:#15171F}
 </style>
 <link rel="stylesheet" href="/theme.css">
 <script src="/theme.js"></script>
@@ -115,14 +185,14 @@ header{position:sticky;top:0;z-index:30;background:var(--K);color:#fff;padding:1
 <div id="gate">
   <div class="gatebox">
     <h1>Panel de administrador</h1>
-    <p>Ingresa la contraseña para editar el catálogo de la tienda COLUNCER.</p>
-    <input type="password" id="pw" placeholder="Contraseña">
-    <button id="pwBtn">Entrar</button>
-    <div class="gateerr" id="gateErr">Contraseña incorrecta.</div>
-    <div class="gatenote">
-      ⚠️ Esta contraseña solo oculta el panel a simple vista: al ser un sitio sin servidor, cualquiera con
-      conocimientos técnicos podría verla en el código fuente. No la uses para proteger información sensible.
-    </div>
+    <p id="gateLead">Inicia sesión para ver tus ventas y editar la tienda COLUNCER.</p>
+    <form id="loginForm" autocomplete="on">
+      <input type="text" id="usr" name="username" placeholder="Usuario" autocomplete="username" required>
+      <input type="password" id="pw" name="password" placeholder="Contraseña" autocomplete="current-password" required>
+      <button type="submit" id="pwBtn">Entrar</button>
+    </form>
+    <div class="gateerr" id="gateErr"></div>
+    <div class="gatenote" id="gateNote" style="display:none"></div>
   </div>
 </div>
 
@@ -130,14 +200,20 @@ header{position:sticky;top:0;z-index:30;background:var(--K);color:#fff;padding:1
 <div id="app">
   <header>
     <div class="htop">
-      <h1>COLUNCER <span>· Admin de productos</span></h1>
+      <h1>COLUNCER <span>· Administrador</span></h1>
       <a class="hbtn" href="index.html" target="_blank">Ver sitio ↗</a>
       <a class="hbtn" href="store.html" target="_blank">Ver tienda ↗</a>
       <button class="hbtn" id="logoutBtn">Salir</button>
     </div>
   </header>
 
+  <nav class="tabs" role="tablist">
+    <button class="tab on" id="tabBtnVentas" role="tab" data-tab="ventas">📊 Ventas</button>
+    <button class="tab" id="tabBtnProductos" role="tab" data-tab="productos">🛍️ Productos</button>
+  </nav>
+
   <div class="wrap">
+  <section id="tabProductos" style="display:none">
     <div class="toolbar">
       <button class="hbtn" style="border-color:var(--LN);color:var(--K)" id="importBtn">Importar products.json</button>
       <input type="file" id="importFile" accept="application/json" style="display:none">
@@ -161,10 +237,80 @@ header{position:sticky;top:0;z-index:30;background:var(--K);color:#fff;padding:1
       <p style="margin-top:8px">Si en otro momento quieres seguir editando desde cero, usa <b>Importar products.json</b>
       para cargar el archivo publicado actual en este panel.</p>
     </div>
+  </section>
+
+  <section id="tabVentas">
+    <details id="diagBox" style="margin:0 0 14px;background:#fff;border:1px solid #E7E8E2;border-radius:14px;padding:12px 16px">
+      <summary id="diagSum" style="cursor:pointer;font-weight:700">🔧 Estado de la configuración</summary>
+      <div id="diagList" style="margin-top:10px;font-size:.88rem;line-height:1.6"></div>
+      <div style="margin-top:10px;font-size:.82rem;color:#6E707A">Probar páginas de resultado:
+        <a href="/gracias-aprobado" target="_blank">aprobado</a> · <a href="/gracias-pendiente" target="_blank">pendiente</a> · <a href="/gracias-rechazado" target="_blank">rechazado</a></div>
+    </details>
+    <div class="vbar">
+      <select id="vPeriod" aria-label="Periodo">
+        <option value="hoy">Hoy</option><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option>
+        <option value="mes">Este mes</option><option value="mespasado">Mes pasado</option><option value="todo">Todo el historial</option><option value="rango">Rango de fechas…</option>
+      </select>
+      <input type="date" id="vFrom" style="display:none" aria-label="Desde"><input type="date" id="vTo" style="display:none" aria-label="Hasta">
+      <select id="vStatus" aria-label="Estado del pago">
+        <option value="">Todos los pagos</option><option value="APPROVED">Aprobados</option><option value="PENDING">Pendientes</option><option value="FAILED">Rechazados / anulados</option>
+      </select>
+      <select id="vFul" aria-label="Estado del envío">
+        <option value="">Todos los envíos</option><option value="nuevo">Nuevos</option><option value="preparando">Preparando</option><option value="enviado">Enviados</option><option value="entregado">Entregados</option><option value="cancelado">Cancelados</option>
+      </select>
+      <select id="vSrc" aria-label="Origen"><option value="">Todas las ventas</option><option value="wompi">Wompi (página)</option><option value="manual">Manuales</option></select>
+      <input type="search" id="vQ" placeholder="Buscar cliente, referencia, producto…">
+      <span class="vspacer"></span>
+      <button class="mini" id="vRefresh">↻ Actualizar</button>
+      <button class="mini" id="vCsv">⬇ Exportar CSV</button>
+      <button class="mini primary" id="vNew">＋ Registrar venta</button>
+    </div>
+    <div id="vMsg"></div>
+    <div id="vBody"></div>
+  </section>
   </div>
 </div>
 
+<!-- DETALLE DE VENTA -->
+<div class="moverlay" id="soverlay"></div>
+<aside class="editor" id="saleDrawer" aria-label="Detalle de la venta">
+  <div class="ehead"><h3 id="sTitle">Venta</h3><button class="eclose" id="sClose" aria-label="Cerrar">✕</button></div>
+  <div class="ebody" id="sBody"></div>
+</aside>
+
+<!-- NUEVA VENTA MANUAL -->
+<aside class="editor" id="manualDrawer" aria-label="Registrar venta manual">
+  <div class="ehead"><h3>Registrar venta manual</h3><button class="eclose" id="mClose" aria-label="Cerrar">✕</button></div>
+  <div class="ebody">
+    <p class="sub">Para ventas cerradas por WhatsApp, transferencia, efectivo u otro canal fuera de Wompi.</p>
+    <div class="field"><label>Productos</label><div id="mItems"></div>
+      <button type="button" class="mini" id="mAddItem">＋ Agregar producto</button>
+      <div class="hint">Precio por unidad en COP. El total se calcula solo.</div></div>
+    <div class="row2">
+      <div class="field"><label>Total (COP)</label><input type="number" id="mAmount" min="0" placeholder="Se calcula con los productos"></div>
+      <div class="field"><label>Fecha</label><input type="date" id="mDate"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Canal</label><select id="mChannel"><option>WhatsApp</option><option>Transferencia</option><option>Efectivo</option><option>Otro</option></select></div>
+      <div class="field"><label>Estado del pago</label><select id="mStatus"><option value="APPROVED">Pagado</option><option value="PENDING">Pendiente de pago</option></select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Cliente</label><input type="text" id="mNombre" placeholder="Nombre"></div>
+      <div class="field"><label>Celular</label><input type="text" id="mTel" placeholder="3001234567"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Ciudad</label><input type="text" id="mCiu"></div>
+      <div class="field"><label>Departamento</label><input type="text" id="mDep"></div>
+    </div>
+    <div class="field"><label>Dirección de entrega</label><input type="text" id="mDir"></div>
+    <div class="field"><label>Notas</label><textarea id="mNotes" placeholder="Opcional"></textarea></div>
+    <div class="ebtns"><button class="cancel" id="mCancel">Cancelar</button><button class="save" id="mSave">Guardar venta</button></div>
+  </div>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+
 <!-- EDITOR -->
+
 <div class="moverlay" id="moverlay"></div>
 <aside class="editor" id="editor">
   <div class="ehead">
@@ -230,33 +376,355 @@ header{position:sticky;top:0;z-index:30;background:var(--K);color:#fff;padding:1
 
 <script src="products.js"></script>
 <script>
-const ADMIN_PASSWORD = "coluncer2026"; /* Cambia esta contraseña por una propia */
-
 let products = [];
 let editingId = null;
 
-/* ---- Login gate ---- */
-const SESSION_KEY = "coluncer_admin_session";
-function tryLogin(){
-  const val = document.getElementById("pw").value;
-  if(val === ADMIN_PASSWORD){
-    sessionStorage.setItem(SESSION_KEY, "1");
-    showApp();
-  }else{
-    document.getElementById("gateErr").style.display = "block";
-  }
+const $ = id => document.getElementById(id);
+const cop = n => "$" + Math.round(Number(n) || 0).toLocaleString("es-CO");
+const PAY = {APPROVED:"Aprobado", PENDING:"Pendiente", DECLINED:"Rechazado", VOIDED:"Anulado", ERROR:"Error", INICIADA:"Iniciada"};
+const FULS = ["nuevo","preparando","enviado","entregado","cancelado"];
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const E = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove("on"), 2600); }
+
+/* ---- API (sesión por cookie segura; sin contraseñas en este archivo) ---- */
+async function api(path, opts){
+  const r = await fetch(path, {credentials:"same-origin", headers:{"Content-Type":"application/json"}, ...opts});
+  let data = {}; try{ data = await r.json(); }catch(e){}
+  if(r.status === 401 && path !== "/api/admin/login"){ showGate(); throw new Error("Sesión vencida"); }
+  if(!r.ok){ const e = new Error(data.message || data.error || "Error"); e.code = data.error; e.status = r.status; throw e; }
+  return data;
 }
-document.getElementById("pwBtn").onclick = tryLogin;
-document.getElementById("pw").addEventListener("keydown", e => { if(e.key === "Enter") tryLogin(); });
-document.getElementById("logoutBtn").onclick = () => { sessionStorage.removeItem(SESSION_KEY); location.reload(); };
+
+/* ---- Acceso ---- */
+function showGate(msg){
+  $("app").style.display = "none"; $("gate").style.display = "flex";
+  if(msg){ $("gateErr").textContent = msg; $("gateErr").style.display = "block"; }
+}
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("gateErr").style.display = "none"; $("pwBtn").disabled = true;
+  try{
+    await api("/api/admin/login", {method:"POST", body:JSON.stringify({user:$("usr").value.trim(), password:$("pw").value})});
+    $("pw").value = ""; await showApp();
+  }catch(err){
+    if(err.code === "no_configurado") notConfigured();
+    else showGate(err.status === 429 ? "Demasiados intentos. Espera unos minutos." : (err.message || "No se pudo iniciar sesión."));
+  }finally{ $("pwBtn").disabled = false; }
+});
+function notConfigured(){
+  $("loginForm").style.display = "none";
+  $("gateLead").textContent = "El acceso todavía no está configurado.";
+  const n = $("gateNote"); n.style.display = "block";
+  n.innerHTML = "En Render → tu servicio → <b>Environment</b>, crea <code>ADMIN_PASSWORD</code> (mínimo 10 caracteres) y, si quieres, <code>ADMIN_USER</code>. Guarda y espera el redeploy.";
+}
+$("logoutBtn").onclick = async () => { try{ await api("/api/admin/logout", {method:"POST"}); }catch(e){} location.reload(); };
+
+async function boot(){
+  try{
+    const me = await api("/api/admin/me");
+    if(!me.configured) return notConfigured();
+    if(me.ok) return showApp();
+  }catch(e){}
+  showGate();
+}
 
 async function showApp(){
-  document.getElementById("gate").style.display = "none";
-  document.getElementById("app").style.display = "block";
+  $("gate").style.display = "none"; $("app").style.display = "block";
   products = await loadProducts();
   renderGrid();
+  selectTab(location.hash === "#productos" ? "productos" : "ventas");
 }
-if(sessionStorage.getItem(SESSION_KEY) === "1") showApp();
+
+/* ---- Pestañas ---- */
+function selectTab(name){
+  $("tabVentas").style.display = name === "ventas" ? "block" : "none";
+  $("tabProductos").style.display = name === "productos" ? "block" : "none";
+  $("tabBtnVentas").classList.toggle("on", name === "ventas");
+  $("tabBtnProductos").classList.toggle("on", name === "productos");
+  history.replaceState(null, "", name === "productos" ? "#productos" : "#ventas");
+  if(name === "ventas") loadSales();
+}
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => selectTab(b.dataset.tab));
+
+/* ================= VENTAS ================= */
+let SALES = [];
+
+function periodRange(){
+  const v = $("vPeriod").value, now = new Date(), day = 86400000;
+  const sod = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let from = null, to = null;
+  if(v === "hoy") from = sod;
+  else if(v === "7") from = new Date(sod - 6*day);
+  else if(v === "30") from = new Date(sod - 29*day);
+  else if(v === "mes") from = new Date(now.getFullYear(), now.getMonth(), 1);
+  else if(v === "mespasado"){ from = new Date(now.getFullYear(), now.getMonth()-1, 1); to = new Date(now.getFullYear(), now.getMonth(), 1); }
+  else if(v === "rango"){
+    if($("vFrom").value) from = new Date($("vFrom").value + "T00:00");
+    if($("vTo").value) to = new Date(new Date($("vTo").value + "T00:00").getTime() + day);
+  }
+  return {from, to};
+}
+
+async function loadDiag(){
+  try{
+    const d = await api("/api/admin/diagnostico");
+    const bad = d.checks.filter(c => !c.ok);
+    $("diagSum").textContent = bad.length ? "⚠️ Configuración incompleta (" + bad.length + ")" : "✅ Configuración completa";
+    if(bad.length) $("diagBox").open = true;
+    $("diagList").innerHTML = d.checks.map(c => (c.ok ? "✅ " : "❌ ") + "<b>" + E(c.label) + "</b>" + (c.ok ? "" : " — " + E(c.fix))).join("<br>");
+  }catch(e){}
+}
+async function loadSales(){
+  loadDiag();
+  const {from, to} = periodRange();
+  const qs = new URLSearchParams();
+  if(from) qs.set("from", from.toISOString());
+  if(to) qs.set("to", to.toISOString());
+  $("vMsg").innerHTML = "";
+  try{
+    const data = await api("/api/admin/sales?" + qs);
+    SALES = data.sales || [];
+    renderSales();
+  }catch(e){
+    if(e.code === "sin_base"){
+      $("vBody").innerHTML = "";
+      $("vMsg").innerHTML = '<div class="vcard vmsg"><b>Falta conectar la base de datos.</b><br>Crea una base Postgres gratis (Neon o Supabase), copia su <code>DATABASE_URL</code> y pégala en Render → Environment. Al guardar, Render reinicia y este panel empieza a registrar las ventas.</div>';
+    }else if(e.message !== "Sesión vencida"){
+      $("vMsg").innerHTML = '<div class="vcard vmsg">No se pudieron cargar las ventas: ' + E(e.message) + '</div>';
+    }
+  }
+}
+
+const saleDate = s => new Date(s.paid_at || s.created_at);
+const fmtDate = d => d.toLocaleDateString("es-CO", {day:"2-digit", month:"short", year:"numeric"}) + " " + d.toLocaleTimeString("es-CO", {hour:"2-digit", minute:"2-digit"});
+const isRevenue = s => s.status === "APPROVED" && s.fulfillment !== "cancelado";
+const itemsText = s => (s.items || []).map(i => (i.qty && i.unit ? i.qty + "× " : (i.qty > 1 ? i.qty + "× " : "")) + i.name).join(", ");
+const custName = s => (s.customer && (s.customer.nombre || s.customer.email || s.customer.mail)) || "";
+
+function filtered(){
+  const st = $("vStatus").value, fu = $("vFul").value, sr = $("vSrc").value, q = $("vQ").value.trim().toLowerCase();
+  return SALES.filter(s => {
+    if(st === "FAILED" ? !["DECLINED","VOIDED","ERROR"].includes(s.status) : (st && s.status !== st)) return false;
+    if(fu && s.fulfillment !== fu) return false;
+    if(sr && s.source !== sr) return false;
+    if(q && !(s.reference + " " + JSON.stringify(s.customer) + " " + itemsText(s) + " " + (s.tracking||"")).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderSales(){
+  const rev = SALES.filter(isRevenue);
+  const income = rev.reduce((t,s) => t + s.amount_cents/100, 0);
+  const pend = SALES.filter(s => s.status === "PENDING");
+  const toShip = SALES.filter(s => isRevenue(s) && ["nuevo","preparando"].includes(s.fulfillment));
+  const failed = SALES.filter(s => ["DECLINED","VOIDED","ERROR"].includes(s.status));
+  const kpi = (l, v, sub, hi) => `<div class="kpi${hi?" kpi-hi":""}"><div class="kl">${l}</div><div class="kv">${v}</div><div class="ks">${sub}</div></div>`;
+  const kpis = '<div class="kpis">'
+    + kpi("Ingresos", cop(income), "ventas aprobadas", true)
+    + kpi("Pedidos", rev.length, "aprobados")
+    + kpi("Ticket promedio", rev.length ? cop(income/rev.length) : "—", "por pedido")
+    + kpi("Por despachar", toShip.length, "pagados sin enviar")
+    + kpi("Pagos pendientes", pend.length, cop(pend.reduce((t,s)=>t+s.amount_cents/100,0)) + " por confirmar")
+    + kpi("Rechazados", failed.length, "no cobrados") + '</div>';
+
+  /* Productos más vendidos */
+  const top = new Map();
+  rev.forEach(s => (s.items||[]).forEach(i => {
+    const t = top.get(i.name) || {qty:0, total:0}; t.qty += i.qty || 1; t.total += (i.unit||0) * (i.qty||1); top.set(i.name, t);
+  }));
+  const topRows = [...top.entries()].sort((a,b) => b[1].qty - a[1].qty).slice(0,6);
+  const topHtml = topRows.length
+    ? '<ul class="toplist">' + topRows.map(([n,t]) => `<li><span class="tn" title="${E(n)}">${E(n)}</span><span class="tq">${t.qty} u.${t.total ? " · " + cop(t.total) : ""}</span></li>`).join("") + '</ul>'
+    : '<div class="empty-note">Aún no hay ventas aprobadas en este periodo.</div>';
+
+  const rows = filtered();
+  const body = rows.slice(0, 500).map(s => {
+    const d = saleDate(s);
+    const manual = s.source === "manual" ? ' <span class="badge b-manual">' + E(s.channel || "Manual") + '</span>' : "";
+    return `<tr class="srow" data-id="${s.id}">
+      <td>${fmtDate(d)}</td>
+      <td><b>${E(s.reference)}</b>${manual}<div class="sub">${E(s.payment_method || "")}</div></td>
+      <td>${E(custName(s)) || '<span class="sub">Sin datos de envío</span>'}<div class="sub">${E((s.customer||{}).ciu || "")}</div></td>
+      <td style="max-width:260px">${E(itemsText(s)) || '<span class="sub">—</span>'}</td>
+      <td class="num">${cop(s.amount_cents/100)}</td>
+      <td><span class="badge b-${s.status}">${PAY[s.status] || E(s.status)}</span></td>
+      <td><select class="fsel" data-ful="${s.id}" aria-label="Estado del envío">${FULS.map(f => `<option value="${f}"${f===s.fulfillment?" selected":""}>${cap(f)}</option>`).join("")}</select></td>
+    </tr>`;
+  }).join("");
+  const table = rows.length
+    ? `<div class="tablewrap"><table class="sales"><thead><tr><th>Fecha</th><th>Referencia</th><th>Cliente</th><th>Productos</th><th style="text-align:right">Total</th><th>Pago</th><th>Envío</th></tr></thead><tbody>${body}</tbody></table></div>`
+      + (rows.length > 500 ? `<p class="sub" style="margin-top:8px">Mostrando 500 de ${rows.length}. Usa los filtros para acotar.</p>` : "")
+    : '<div class="vcard vmsg">No hay ventas con estos filtros. Cuando alguien pague en la página, aparecerá aquí. También puedes <b>registrar una venta manual</b>.</div>';
+
+  $("vBody").innerHTML = kpis
+    + '<div class="vgrid"><div class="vcard"><h3>Ingresos por ' + (chartMonthly() ? "mes" : "día") + '</h3>' + chartSvg(rev) + '</div>'
+    + '<div class="vcard"><h3>Más vendidos</h3>' + topHtml + '</div></div>' + table;
+
+  document.querySelectorAll("tr.srow").forEach(tr => tr.onclick = () => openSale(+tr.dataset.id));
+  document.querySelectorAll("select[data-ful]").forEach(sel => {
+    sel.onclick = e => e.stopPropagation();
+    sel.onchange = async () => {
+      try{ const r = await api("/api/admin/sales/" + sel.dataset.ful, {method:"PATCH", body:JSON.stringify({fulfillment: sel.value})});
+        replaceSale(r.sale); toast("Envío actualizado"); renderSales();
+      }catch(e){ toast(e.message); renderSales(); }
+    };
+  });
+}
+const replaceSale = row => { const i = SALES.findIndex(s => s.id === row.id); if(i >= 0) SALES[i] = row; };
+
+/* Gráfico de barras en SVG (por día; por mes si el periodo es largo) */
+function chartMonthly(){
+  const {from, to} = periodRange();
+  const start = from || (SALES.length ? new Date(Math.min(...SALES.map(saleDate))) : new Date());
+  return ((to || new Date()) - start) / 86400000 > 62;
+}
+function chartSvg(rev){
+  const {from, to} = periodRange(), monthly = chartMonthly();
+  const end = to ? new Date(to - 1) : new Date();
+  const start = from || (rev.length ? new Date(Math.min(...rev.map(saleDate))) : end);
+  const key = d => monthly ? d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") : d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  const buckets = new Map(), labels = new Map();
+  const cur = new Date(start.getFullYear(), start.getMonth(), monthly ? 1 : start.getDate());
+  while(cur <= end && buckets.size < 400){
+    buckets.set(key(cur), 0);
+    labels.set(key(cur), monthly ? cur.toLocaleDateString("es-CO", {month:"short", year:"2-digit"}) : cur.toLocaleDateString("es-CO", {day:"numeric", month:"short"}));
+    monthly ? cur.setMonth(cur.getMonth()+1) : cur.setDate(cur.getDate()+1);
+  }
+  rev.forEach(s => { const k = key(saleDate(s)); if(buckets.has(k)) buckets.set(k, buckets.get(k) + s.amount_cents/100); });
+  const vals = [...buckets.values()], keys = [...buckets.keys()];
+  const max = Math.max(...vals, 1);
+  if(!vals.some(v => v > 0)) return '<div class="empty-note">Sin ventas aprobadas en este periodo.</div>';
+  const W = 800, H = 220, padB = 24, padT = 18, n = vals.length, bw = W / n;
+  const bars = vals.map((v,i) => {
+    const h = Math.max((H - padB - padT) * v / max, v > 0 ? 2 : 0);
+    return `<rect class="bar" x="${(i*bw + bw*0.12).toFixed(1)}" y="${(H - padB - h).toFixed(1)}" width="${(bw*0.76).toFixed(1)}" height="${h.toFixed(1)}" rx="${Math.min(4, bw*0.3).toFixed(1)}"><title>${E(labels.get(keys[i]))}: ${cop(v)}</title></rect>`;
+  }).join("");
+  const every = Math.ceil(n / 8);
+  const ticks = keys.map((k,i) => i % every === 0 ? `<text x="${(i*bw + bw/2).toFixed(1)}" y="${H-6}" text-anchor="middle">${E(labels.get(k))}</text>` : "").join("");
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Ingresos por ${monthly ? "mes" : "día"}"><text x="0" y="10">máx. ${cop(max)}</text>${bars}${ticks}</svg>`;
+}
+
+/* ---- Detalle de una venta ---- */
+function waLink(tel, text){
+  const d = String(tel || "").replace(/\D/g, ""); if(d.length < 10) return "";
+  return "https://wa.me/" + (d.length === 10 ? "57" + d : d) + (text ? "?text=" + encodeURIComponent(text) : "");
+}
+function shipText(s){
+  const c = s.customer || {};
+  return ["Pedido: " + s.reference, "Productos: " + itemsText(s), "Nombre: " + (c.nombre||""), "Documento: " + (c.doc||""), "Celular: " + (c.tel||""),
+    "Correo: " + (c.mail || c.email || ""), "Departamento: " + (c.dep||""), "Ciudad: " + (c.ciu||""), "Dirección: " + (c.dir||""), "Indicaciones: " + (c.barrio||"")].join("\n");
+}
+let openId = null;
+function openSale(id){
+  const s = SALES.find(x => x.id === id); if(!s) return;
+  openId = id;
+  const c = s.customer || {}, manual = s.source === "manual";
+  const dl = (rows) => '<dl class="dl">' + rows.filter(r => r[1]).map(r => `<dt>${r[0]}</dt><dd>${E(r[1])}</dd>`).join("") + '</dl>';
+  const hasShip = c.nombre || c.dir;
+  const wa = waLink(c.tel, "Hola " + (c.nombre || "") + ", te escribimos de COLUNCER por tu pedido " + s.reference + ".");
+  $("sTitle").textContent = "Venta " + s.reference;
+  $("sBody").innerHTML = `
+    <div class="dgroup"><h4>Pago</h4>
+      ${dl([["Estado", PAY[s.status] || s.status], ["Total", cop(s.amount_cents/100)], ["Método", s.payment_method || s.channel],
+            ["Fecha", fmtDate(saleDate(s))], ["Origen", manual ? "Manual · " + (s.channel || "") : "Wompi (página)"], ["ID Wompi", s.wompi_id]])}
+      ${manual ? `<div class="row2" style="margin-top:12px"><div class="field"><label>Estado del pago</label><select id="dStatus"><option value="APPROVED"${s.status==="APPROVED"?" selected":""}>Pagado</option><option value="PENDING"${s.status==="PENDING"?" selected":""}>Pendiente</option><option value="VOIDED"${s.status==="VOIDED"?" selected":""}>Anulado</option></select></div><div class="field"><label>Total (COP)</label><input type="number" id="dAmount" min="1" value="${Math.round(s.amount_cents/100)}"></div></div>` : ""}
+    </div>
+    <div class="dgroup"><h4>Productos</h4>
+      ${(s.items||[]).length ? '<ul class="itl">' + s.items.map(i => `<li><span>${i.qty && i.unit ? i.qty + "× " : ""}${E(i.name)}</span><span>${i.unit ? cop(i.unit * (i.qty||1)) : ""}</span></li>`).join("") + '</ul>' : '<div class="sub">Sin detalle de productos.</div>'}
+    </div>
+    <div class="dgroup"><h4>Cliente y envío</h4>
+      ${hasShip ? dl([["Nombre", c.nombre], ["Documento", c.doc], ["Celular", c.tel], ["Correo", c.mail || c.email], ["Departamento", c.dep], ["Ciudad", c.ciu], ["Dirección", c.dir], ["Indicaciones", c.barrio]])
+        : '<div class="sub">El cliente aún no ha llenado el formulario de envío.' + (c.email ? " Correo de Wompi: " + E(c.email) : "") + '</div>'}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        ${hasShip ? '<button class="mini" id="dCopy">Copiar datos de envío</button>' : ""}
+        ${wa ? `<a class="mini" href="${E(wa)}" target="_blank" rel="noopener">WhatsApp al cliente</a>` : ""}
+      </div>
+    </div>
+    <div class="dgroup"><h4>Gestión del pedido</h4>
+      <div class="row2">
+        <div class="field"><label>Estado del envío</label><select id="dFul">${FULS.map(f => `<option value="${f}"${f===s.fulfillment?" selected":""}>${cap(f)}</option>`).join("")}</select></div>
+        <div class="field"><label>Guía / seguimiento</label><input type="text" id="dTrack" value="${E(s.tracking||"")}" maxlength="120" placeholder="N.º de guía"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Notas internas</label><textarea id="dNotes" maxlength="500">${E(s.notes||"")}</textarea></div>
+    </div>
+    <div class="ebtns">${manual ? '<button class="cancel mini danger" id="dDel" style="flex:0 0 auto;padding:13px 18px">Eliminar</button>' : ""}<button class="save" id="dSave">Guardar cambios</button></div>`;
+  $("dSave").onclick = saveSale;
+  if($("dCopy")) $("dCopy").onclick = () => navigator.clipboard.writeText(shipText(s)).then(() => toast("Datos copiados"), () => toast("No se pudo copiar"));
+  if($("dDel")) $("dDel").onclick = async () => {
+    if(!confirm("¿Eliminar esta venta manual? No se puede deshacer.")) return;
+    try{ await api("/api/admin/sales/" + id, {method:"DELETE"}); closeSale(); toast("Venta eliminada"); loadSales(); }catch(e){ toast(e.message); }
+  };
+  $("soverlay").classList.add("on"); $("saleDrawer").classList.add("on");
+}
+async function saveSale(){
+  const body = {fulfillment: $("dFul").value, tracking: $("dTrack").value, notes: $("dNotes").value};
+  if($("dStatus")){ body.status = $("dStatus").value; body.amount = Number($("dAmount").value); }
+  $("dSave").disabled = true;
+  try{ const r = await api("/api/admin/sales/" + openId, {method:"PATCH", body:JSON.stringify(body)}); replaceSale(r.sale); toast("Cambios guardados"); closeSale(); renderSales(); }
+  catch(e){ toast(e.message); }
+  finally{ const b = $("dSave"); if(b) b.disabled = false; }
+}
+function closeSale(){ openId = null; $("soverlay").classList.remove("on"); $("saleDrawer").classList.remove("on"); $("manualDrawer").classList.remove("on"); }
+$("sClose").onclick = closeSale; $("soverlay").onclick = closeSale; $("mClose").onclick = closeSale; $("mCancel").onclick = closeSale;
+
+/* ---- Venta manual ---- */
+function itemRow(name="", qty=1, unit=""){
+  const d = document.createElement("div"); d.className = "itrow";
+  d.innerHTML = `<input type="text" class="in-name" placeholder="Producto" maxlength="140" value="${E(name)}"><input type="number" class="in-qty" min="1" value="${qty}" aria-label="Cantidad"><input type="number" class="in-unit" min="0" placeholder="Precio c/u" value="${unit}" aria-label="Precio unitario"><button type="button" aria-label="Quitar">✕</button>`;
+  d.querySelector("button").onclick = () => { d.remove(); recalc(); };
+  d.querySelectorAll("input").forEach(i => i.oninput = recalc);
+  $("mItems").appendChild(d);
+}
+function manualItems(){
+  return [...document.querySelectorAll("#mItems .itrow")].map(r => ({name:r.querySelector(".in-name").value.trim(), qty:+r.querySelector(".in-qty").value || 1, unit:+r.querySelector(".in-unit").value || 0})).filter(i => i.name);
+}
+function recalc(){ const t = manualItems().reduce((a,i) => a + i.qty * i.unit, 0); $("mAmount").placeholder = t ? cop(t) + " (automático)" : "Se calcula con los productos"; }
+$("vNew").onclick = () => {
+  $("mItems").innerHTML = ""; itemRow();
+  ["mAmount","mNombre","mTel","mCiu","mDep","mDir","mNotes"].forEach(id => $(id).value = "");
+  $("mDate").value = new Date().toISOString().slice(0,10); $("mStatus").value = "APPROVED"; $("mChannel").value = "WhatsApp"; recalc();
+  $("soverlay").classList.add("on"); $("manualDrawer").classList.add("on");
+};
+$("mAddItem").onclick = () => itemRow();
+$("mSave").onclick = async () => {
+  const items = manualItems(), amount = Number($("mAmount").value) || items.reduce((a,i) => a + i.qty * i.unit, 0);
+  if(!items.length && !amount) return toast("Agrega un producto o un monto.");
+  if(!(amount > 0)) return toast("Indica el precio de los productos o el total.");
+  $("mSave").disabled = true;
+  try{
+    await api("/api/admin/sales", {method:"POST", body:JSON.stringify({
+      items, amount, date: $("mDate").value ? $("mDate").value + "T12:00:00" : undefined, channel: $("mChannel").value, status: $("mStatus").value, notes: $("mNotes").value,
+      customer: {nombre:$("mNombre").value, tel:$("mTel").value, ciu:$("mCiu").value, dep:$("mDep").value, dir:$("mDir").value}
+    })});
+    closeSale(); toast("Venta registrada"); await loadSales();
+  }catch(e){ toast(e.message); }
+  finally{ $("mSave").disabled = false; }
+};
+
+/* ---- Filtros, CSV y refresco ---- */
+$("vPeriod").onchange = () => { const r = $("vPeriod").value === "rango"; $("vFrom").style.display = $("vTo").style.display = r ? "" : "none"; if(!r) loadSales(); };
+$("vFrom").onchange = $("vTo").onchange = loadSales;
+["vStatus","vFul","vSrc"].forEach(id => $(id).onchange = renderSales);
+$("vQ").oninput = renderSales;
+$("vRefresh").onclick = () => { loadSales(); toast("Actualizado"); };
+setInterval(() => { if($("tabVentas").style.display !== "none" && $("app").style.display !== "none" && !document.hidden && openId === null && !$("manualDrawer").classList.contains("on")) loadSales(); }, 60000);
+
+function csvCell(v){ v = String(v ?? ""); if(/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; }
+$("vCsv").onclick = () => {
+  const rows = filtered();
+  if(!rows.length) return toast("No hay ventas para exportar.");
+  const head = ["Fecha","Referencia","Origen","Canal","Estado pago","Método","Total COP","Productos","Cliente","Documento","Celular","Correo","Departamento","Ciudad","Dirección","Indicaciones","Estado envío","Guía","Notas"];
+  const lines = rows.map(s => { const c = s.customer || {}; return [saleDate(s).toISOString(), s.reference, s.source, s.channel, PAY[s.status] || s.status, s.payment_method, Math.round(s.amount_cents/100),
+    itemsText(s), c.nombre, c.doc, c.tel, c.mail || c.email, c.dep, c.ciu, c.dir, c.barrio, s.fulfillment, s.tracking, s.notes].map(csvCell).join(","); });
+  const blob = new Blob(["﻿" + head.map(csvCell).join(",") + "\n" + lines.join("\n")], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ventas-coluncer-" + new Date().toISOString().slice(0,10) + ".csv"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+};
+document.addEventListener("keydown", e => { if(e.key === "Escape" && (openId !== null || $("manualDrawer").classList.contains("on"))) closeSale(); });
+
+boot();
+
 
 /* ---- Persistence ---- */
 function persist(){

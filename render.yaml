@@ -15,3 +15,13 @@ services:
         sync: false
       - key: MAIL_TO
         value: gerencia@coluncer.com
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: WOMPI_EVENTS_SECRET
+        sync: false

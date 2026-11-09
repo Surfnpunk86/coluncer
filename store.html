@@ -117,6 +117,7 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
 </style>
 <link rel="stylesheet" href="/theme.css">
 <script src="/theme.js"></script>
+<script src="/checkout.js"></script>
 </head>
 <body class="t-app">
 
@@ -297,11 +298,24 @@ document.addEventListener("keydown", e => { if(e.key === "Escape") closeProduct(
 
 const WOMPI_SIGNATURE_ENDPOINT = "/api/wompi-signature"; /* mismo dominio: lo atiende server.js */
 
+/* Datos que Wompi muestra ya llenos en su ventana de pago */
+function wompiPrefill(c){
+  const tel = String(c.tel||"").replace(/\D/g,"").slice(-10);
+  const cfg = {
+    customerData: Object.assign({fullName:c.nombre, phoneNumber:tel, phoneNumberPrefix:"+57", legalId:c.doc, legalIdType:"CC"}, c.mail ? {email:c.mail} : {}),
+    shippingAddress: {addressLine1:c.dir, city:c.ciu, phoneNumber:tel, region:c.dep, country:"CO"}
+  };
+  return cfg;
+}
+
 async function payWithWompi(p, amount){
   if(!WOMPI_PUBLIC_KEY || WOMPI_PUBLIC_KEY.includes("TU_LLAVE")){
     alert("Falta configurar la llave pública de Wompi para activar los pagos en línea.");
     return;
   }
+  const lines = [`1x ${p.name} — ${cop(amount)}`];
+  const customer = await CheckoutShip.ask({lines, total: amount});   /* 1) datos de envío antes del pago */
+  if(!customer) return;
   const ref = `P${p.id}-${Date.now()}`;
   const amountInCents = amount * 100;
   const btn = document.getElementById("pmWompi");
@@ -313,22 +327,26 @@ async function payWithWompi(p, amount){
     const res = await fetch(WOMPI_SIGNATURE_ENDPOINT, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({reference:ref, amountInCents, currency:"COP"})
+      body: JSON.stringify({reference:ref, amountInCents, currency:"COP", items:[{name:p.name, qty:1, unit:amount}], customer})
     });
     const data = await res.json();
     if(res.ok && data.signature) signature = data.signature;
   }catch(e){ /* si el servicio de firma no responde, seguimos sin ella (ver nota abajo) */ }
 
   if(btn){ btn.disabled = false; btn.textContent = originalLabel; }
+  if(!signature){
+    alert("No pudimos preparar el pago seguro en este momento. Inténtalo de nuevo en unos minutos o escríbenos por WhatsApp.");
+    return;
+  }
 
-  const checkoutConfig = {
+  const checkoutConfig = Object.assign({
     currency: "COP",
     amountInCents,
     reference: ref,
     publicKey: WOMPI_PUBLIC_KEY,
-    redirectUrl: WOMPI_REDIRECT_URL
-  };
-  if(signature) checkoutConfig.signature = { integrity: signature };
+    redirectUrl: WOMPI_REDIRECT_URL,
+    signature: { integrity: signature }
+  }, wompiPrefill(customer));
 
   /* Pedido guardado en este navegador para mostrarlo en la página de gracias */
   try{ localStorage.setItem("coluncer_last_order", JSON.stringify({ref, lines:[`1x ${p.name} — ${cop(amount)}`], total:amount, ts:Date.now()})); }catch(e){}
@@ -337,7 +355,7 @@ async function payWithWompi(p, amount){
   checkout.open(function(result){
     const tx = result && result.transaction;
     if(tx && tx.id){
-      location.href = "/pago-resultado?id=" + encodeURIComponent(tx.id);
+      location.href = "/pago-resultado?id=" + encodeURIComponent(tx.id) + "&ref=" + encodeURIComponent(ref);
     }else{ /* cerró el checkout sin completar el pago */
       location.href = "/gracias-rechazado?cancelado=1&ref=" + encodeURIComponent(ref);
     }
