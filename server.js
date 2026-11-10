@@ -158,7 +158,7 @@ async function notifyOrder(tx) {
 
 const fs = require("fs");
 const WOMPI_API_BASE = process.env.WOMPI_API_BASE || "https://production.wompi.co/v1";
-const WHATSAPP = /^\d{10,15}$/.test(process.env.WHATSAPP_NUMBER || "") ? process.env.WHATSAPP_NUMBER : "573016315921";
+const WHATSAPP = /^\d{10,15}$/.test(process.env.WHATSAPP_NUMBER || "") ? process.env.WHATSAPP_NUMBER : "573117353460";
 const TX_ID_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/;
 
 const RESULT_PAGES = {
