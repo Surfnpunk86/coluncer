@@ -284,6 +284,7 @@ app.get("/theme.css", page("theme.css"));
 app.get("/theme.js", page("theme.js"));
 app.get("/checkout.js", page("checkout.js"));
 app.get("/products.json", page("products.json", res => res.setHeader("Cache-Control", "no-cache")));
+app.use("/media", express.static(path.join(ROOT, "media"), { dotfiles: "deny", index: false, maxAge: "7d" }));
 app.use("/images", express.static(path.join(ROOT, "images"), { dotfiles: "deny", index: false, maxAge: "7d" }));
 
 app.get("/healthz", (req, res) => res.type("text").send("ok"));
