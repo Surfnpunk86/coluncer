@@ -795,7 +795,7 @@ grid.innerHTML = CAT.map((p,i)=>{
   <article class="pc rv in ${["","d1","d2","d3"][i%4]}" data-open="${p.id}" style="cursor:pointer">
     <div class="pph" style="background:${p.bg}${p.img?`;background-image:url('${p.img}');background-size:contain;background-position:center;background-repeat:no-repeat`:""}">
       <span class="pcat">${p.cat}</span>
-      ${hasDisc?`<span class="pbadge" style="background:var(--V);color:#fff">-${p.discount}%</span>`:p.badge?`<span class="pbadge">${p.badge}</span>`:""}
+      ${hasDisc?`<span class="pbadge" style="background:var(--V);color:#fff">${discTag(p)}</span>`:p.badge?`<span class="pbadge">${p.badge}</span>`:""}
       ${p.img?"":(p.e||"")}
     </div>
     <div class="pb">
@@ -883,7 +883,7 @@ function openProduct(id){
       <p class="pm-desc">${p.desc||""}</p>
       <div class="pm-pricebox">
         <span class="pm-price">${cop(dp)}</span>
-        ${hasDisc?`<span class="pm-old">${cop(p.price)}</span><span class="pm-save">-${p.discount}% OFF</span>`:""}
+        ${hasDisc?`<span class="pm-old">${cop(p.price)}</span><span class="pm-save">${hasPromo(p)?"PROMO":"-"+p.discount+"% OFF"}</span>`:""}
       </div>
       <div class="pm-actions">
         <button class="btn btn-lime" id="pmAdd">Agregar al pedido</button>

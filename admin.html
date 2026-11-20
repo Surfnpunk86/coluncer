@@ -355,6 +355,11 @@ table.sales .num{text-align:right;font-weight:700;white-space:nowrap}
         <input type="number" id="fDiscount" placeholder="0" min="0" max="95">
       </div>
     </div>
+    <div class="field" id="promoField">
+      <label>Precio promo manual (COP) <span style="font-weight:500;color:var(--mut,#6E707A)">— opcional</span></label>
+      <input type="number" id="fPromo" placeholder="Ej: 299000" min="0">
+      <small id="promoHint" style="display:block;margin-top:6px;color:#6E707A;line-height:1.4">Es el precio final que paga el cliente. Si lo llenas, se ignora el % y la foto muestra "PROMO". Déjalo vacío para usar el %.</small>
+    </div>
     <div class="field">
       <label>Insignia (opcional)</label>
       <input type="text" id="fBadge" placeholder="Nuevo, Más vendido...">
@@ -750,7 +755,7 @@ function renderGrid(){
         <span class="meta">${p.by} · ${p.cat}</span>
         <div class="pricerow">
           <span class="price">${copFmt(dp)}</span>
-          ${hasDisc?`<span class="old">${copFmt(p.price)}</span>`:""}
+          ${hasDisc?`<span class="old">${copFmt(p.price)}</span>`:""}${hasPromo(p)?`<span class="old" style="color:#B0278F;font-weight:800;text-decoration:none">PROMO</span>`:""}
         </div>
         <div class="actions">
           <button class="edit" data-edit="${p.id}">Editar</button>
@@ -778,7 +783,7 @@ function deleteProduct(id){
 const moverlay = document.getElementById("moverlay"), editor = document.getElementById("editor");
 function openEditor(id){
   editingId = id;
-  const p = id ? products.find(x => x.id === id) : {name:"",by:"",cat:"",price:0,discount:0,badge:"",desc:"",sourceUrl:"",img:""};
+  const p = id ? products.find(x => x.id === id) : {name:"",by:"",cat:"",price:0,discount:0,promo:null,badge:"",desc:"",sourceUrl:"",img:""};
   document.getElementById("eTitle").textContent = id ? "Editar producto" : "Nuevo producto";
   document.getElementById("fImg").value = p.img || "";
   document.getElementById("fName").value = p.name || "";
@@ -786,6 +791,8 @@ function openEditor(id){
   document.getElementById("fCat").value = p.cat || "";
   document.getElementById("fPrice").value = p.price || 0;
   document.getElementById("fDiscount").value = p.discount || 0;
+  document.getElementById("fPromo").value = p.promo || "";
+  syncPromoUI();
   document.getElementById("fBadge").value = p.badge || "";
   document.getElementById("fDesc").value = p.desc || "";
   document.getElementById("fSrc").value = p.sourceUrl || "";
@@ -796,6 +803,19 @@ function openEditor(id){
 
   moverlay.classList.add("on"); editor.classList.add("on");
 }
+/* Con precio promo válido el % queda anulado (se conserva el valor, solo se atenúa) */
+function syncPromoUI(){
+  const price = +document.getElementById("fPrice").value || 0, promo = +document.getElementById("fPromo").value || 0;
+  const on = promo > 0 && promo < price;
+  const d = document.getElementById("fDiscount");
+  d.style.opacity = on ? .45 : 1; d.title = on ? "Anulado mientras haya precio promo" : "";
+  const h = document.getElementById("promoHint");
+  h.style.color = (promo > 0 && !on) ? "#C0392B" : "#6E707A";
+  h.textContent = (promo > 0 && !on) ? "El precio promo debe ser menor que el precio normal; mientras tanto se usa el %." :
+    on ? "Promo activa: el cliente paga este valor, el % queda anulado y la foto muestra \"PROMO\"." :
+    "Es el precio final que paga el cliente. Si lo llenas, se ignora el % y la foto muestra \"PROMO\". Déjalo vacío para usar el %.";
+}
+["fPrice","fPromo"].forEach(id => document.getElementById(id).addEventListener("input", syncPromoUI));
 function closeEditor(){ moverlay.classList.remove("on"); editor.classList.remove("on"); }
 document.getElementById("eClose").onclick = closeEditor;
 document.getElementById("eCancel").onclick = closeEditor;
@@ -829,6 +849,7 @@ document.getElementById("eSave").onclick = () => {
     cat: document.getElementById("fCat").value.trim() || "General",
     price: Math.max(0, +document.getElementById("fPrice").value || 0),
     discount: Math.min(95, Math.max(0, +document.getElementById("fDiscount").value || 0)),
+    promo: Math.max(0, Math.round(+document.getElementById("fPromo").value || 0)) || null,
     badge: document.getElementById("fBadge").value.trim() || null,
     desc: document.getElementById("fDesc").value.trim(),
     sourceUrl: document.getElementById("fSrc").value.trim(),

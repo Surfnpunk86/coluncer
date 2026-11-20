@@ -29,7 +29,11 @@ const DEFAULT_PRODUCTS = [
 ];
 
 function copFmt(n){ return "$" + Math.round(n).toLocaleString("es-CO"); }
-function discPrice(p){ return Math.round(p.price * (1 - (p.discount||0)/100)); }
+/* Precio promo manual (promo): si es mayor que 0 y menor que el precio, reemplaza al descuento en %. */
+function hasPromo(p){ return +p.promo > 0 && +p.promo < +p.price; }
+function discPrice(p){ return hasPromo(p) ? Math.round(+p.promo) : Math.round(p.price * (1 - (p.discount||0)/100)); }
+/* Texto de la etiqueta sobre la foto: "PROMO" si hay precio manual; si no, el porcentaje */
+function discTag(p){ return hasPromo(p) ? "PROMO" : "-" + p.discount + "%"; }
 
 /* Carga el catálogo siguiendo el orden descrito arriba. Siempre devuelve un array. */
 async function loadProducts(){
