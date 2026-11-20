@@ -129,7 +129,7 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
 .vh-eyebrow:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
 .vhero .vh-top h1{font-family:'Archivo',sans-serif!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:-.012em!important;line-height:.92;font-size:clamp(2.3rem,6.2vw,5.4rem);margin-top:8px;text-shadow:0 8px 40px rgba(0,0,0,.6)}
 .vhero .vh-top h1 em{display:block;font-family:inherit;text-transform:uppercase;font-style:normal;color:var(--g);text-shadow:0 0 38px rgba(0,242,68,.35)}
-.vh-panel{position:relative;z-index:2;width:min(1180px,94vw);height:clamp(280px,calc(100vh - var(--hh,64px) - 335px),640px);margin-top:-40px;border-radius:26px;overflow:hidden;
+.vh-panel{position:relative;z-index:2;width:min(1180px,94vw);height:clamp(260px,calc(100vh - var(--hh,64px) - 392px),640px);margin-top:-40px;border-radius:26px;overflow:hidden;
   background:#000;transform:scale(calc(1 + var(--vp,0) * .045));
   box-shadow:0 0 0 1.5px rgba(233,30,156,.7),0 0 calc(34px + var(--vp,0) * 40px) rgba(233,30,156,.38),0 0 calc(70px + var(--vp,0) * 40px) rgba(139,43,226,.3),0 30px 90px rgba(0,0,0,.65)}
 .vh-media{position:absolute;inset:0;transform:scale(var(--vz,1));transform-origin:50% 62%;will-change:transform}
@@ -146,6 +146,13 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
 .vh-btn.pri{background:var(--g);color:var(--ink);box-shadow:0 10px 36px rgba(0,242,68,.3)}
 .vh-btn.sec{background:rgba(255,255,255,.06);color:var(--tx);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);backdrop-filter:blur(10px)}
 .vh-btn.sec svg{color:var(--g)}
+.vh-count{position:relative;z-index:3;display:flex;align-items:center;gap:14px;margin-top:14px;padding:8px 18px;border-radius:999px;background:rgba(5,5,6,.6);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);opacity:calc(1 - var(--vp,0) * 2.6)}
+.vh-cl{font-family:'Archivo',sans-serif;font-weight:700;font-size:.69rem;letter-spacing:.14em;text-transform:uppercase;color:#A1A1AA}
+.vh-cc{display:flex;gap:12px}
+.vh-cc .cell{display:inline-flex;align-items:baseline;gap:2px}
+.vh-cc b{font-family:'Archivo',sans-serif;font-weight:800;font-size:1.19rem;color:var(--tx);font-variant-numeric:tabular-nums}
+.vh-cc small{font-size:.69rem;font-weight:600;color:#A1A1AA}
+.vh-count.end{display:none}
 #vhWave{position:absolute;left:0;right:0;bottom:36px;width:100%;height:64px;pointer-events:none;z-index:1}
 .vh-tick{position:absolute;left:0;right:0;bottom:0;height:36px;display:flex;align-items:center;overflow:hidden;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.08);z-index:3}
 .vh-tick div{display:flex;gap:34px;white-space:nowrap;padding-left:34px;animation:vhtk 28s linear infinite;font-family:'Archivo',sans-serif;font-weight:800;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,247,.72)}
@@ -159,6 +166,8 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
   .vh-panel{height:auto;aspect-ratio:16/10;border-radius:18px;margin-top:14px;transform:none}
   .vh-media video,.vh-media img{object-position:60% 50%}
   .vh-ctas{margin-top:16px;width:100%;flex-direction:column}
+  .vh-count{margin-top:12px;gap:10px;padding:7px 14px}
+  .vh-cc{gap:9px}.vh-cc b{font-size:1.05rem}.vh-cl{font-size:.62rem}
   .vh-btn{justify-content:center;width:100%}
   .vh-tick div{font-size:.62rem}
   #vhWave{bottom:34px;height:48px}
@@ -188,8 +197,8 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
     <div class="vh-bar"><i></i></div>
     <span class="vh-beam l"></span><span class="vh-beam r"></span>
     <div class="vh-top">
-      <div class="vh-eyebrow">COLUNCER · Parlantes portátiles</div>
-      <h1>Tu música<em>en todas partes</em></h1>
+      <div class="vh-eyebrow">COLUNCER · Black Days</div>
+      <h1>¡Aprovecha los<em>Black Days!</em></h1>
     </div>
     <div class="vh-panel" id="vhPanel">
       <div class="vh-media" id="vhMedia">
@@ -206,6 +215,10 @@ header{position:sticky;top:0;z-index:50;background:var(--K);color:#fff;padding:1
     <div class="vh-ctas">
       <button class="vh-btn pri" type="button" id="vhCta">Ver parlantes <span aria-hidden="true">→</span></button>
       <a class="vh-btn sec" href="https://wa.me/573117353460?text=%C2%A1Hola%20COLUNCER%21%20Quiero%20asesor%C3%ADa%20para%20elegir%20mi%20parlante." target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.8 14.3c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7a11.3 11.3 0 0 1-4.6-4c-.4-.5-1.2-1.6-1.2-3s.8-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.4-.1.7.2.3.8 1.300 1.700 2.100 1.100 1 2.100 1.300 2.400 1.500.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.900.9c.3.1.5.2.6.3.1.2.1.8-.1 1.500Z"/></svg>Asesoría por WhatsApp</a>
+    </div>
+    <div class="vh-count" id="vhCount" role="timer" aria-label="Tiempo restante de los Black Days">
+      <span class="vh-cl">Termina en</span>
+      <span class="vh-cc"><span class="cell"><b data-u="d">00</b><small>d</small></span><span class="cell"><b data-u="h">00</b><small>h</small></span><span class="cell"><b data-u="m">00</b><small>m</small></span><span class="cell"><b data-u="s">00</b><small>s</small></span></span>
     </div>
     <canvas id="vhWave" aria-hidden="true"></canvas>
     <div class="vh-tick" aria-hidden="true"><div><span>Pago seguro con Wompi</span><i>●</i><span>Envíos a toda Colombia</span><i>●</i><span>Asesoría por WhatsApp</span><i>●</i><span>Parlantes portátiles</span><i>●</i><span>Pago seguro con Wompi</span><i>●</i><span>Envíos a toda Colombia</span><i>●</i><span>Asesoría por WhatsApp</span><i>●</i><span>Parlantes portátiles</span><i>●</i></div></div>
@@ -456,6 +469,21 @@ async function payWithWompi(p, amount){
   var hero=document.getElementById("vhero"); if(!hero) return;
   var v=document.getElementById("vhVideo"), poster=document.getElementById("vhPoster"), media=document.getElementById("vhMedia");
   var caps=hero.querySelectorAll(".vh-cap"), header=document.querySelector("header"), cv=document.getElementById("vhWave"), cx=cv.getContext("2d");
+  /* Cuenta regresiva: termina el 30 de noviembre a medianoche (1 dic 00:00, hora de Colombia) */
+  (function(){
+    var box=document.getElementById("vhCount"), END=Date.parse("2026-12-01T00:00:00-05:00"), el={};
+    ["d","h","m","s"].forEach(function(u){ el[u]=box.querySelector('[data-u="'+u+'"]'); });
+    function pad(n){ return n<10?"0"+n:""+n; }
+    function tick(){
+      var t=Math.max(0,END-Date.now());
+      if(t<=0){ box.classList.add("end"); return; }
+      var s=Math.floor(t/1000);
+      el.d.textContent=pad(Math.floor(s/86400)); el.h.textContent=pad(Math.floor(s%86400/3600));
+      el.m.textContent=pad(Math.floor(s%3600/60)); el.s.textContent=pad(s%60);
+      setTimeout(tick,1000-Date.now()%1000);
+    }
+    tick();
+  })();
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.getElementById("vhCta").onclick=function(){ var t=document.getElementById("shopTop"); scrollTo({top:t.getBoundingClientRect().top+scrollY-(header?header.offsetHeight:0)-8,behavior:"smooth"}); };
   function hh(){ return header?header.offsetHeight:64; }
